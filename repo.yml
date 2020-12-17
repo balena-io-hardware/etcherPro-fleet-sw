@@ -1,0 +1,8 @@
+type: generic
+upstream:
+  - repo: etcher
+    url: https://github.com/balena-io/etcher
+    module: 'etcher'
+  - repo: balena-electron-env
+    url: https://github.com/balenablocks/balena-electron-env
+    module: balena-electron-env

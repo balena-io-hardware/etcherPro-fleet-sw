@@ -1,0 +1,37 @@
+version: '2'
+volumes:
+    etcher_pki:
+    etcher_cache:
+    etcher_bash_history:
+    etcher_config_electron:
+    etcher_config_balena_etcher:
+services:
+  etcher:
+    build: .
+    privileged: true
+    restart: always
+    network_mode: host
+    labels:
+      io.balena.features.dbus: 1
+      io.balena.features.supervisor-api: 1
+    volumes:
+      - 'etcher_pki:/root/.pki'
+      - 'etcher_cache:/root/.cache'
+      - 'etcher_bash_history:/root/.bash_history'
+      - 'etcher_config_electron:/root/.config/Electron'
+      - 'etcher_config_balena_etcher:/root/.config/balena-etcher'
+    tmpfs:
+      - /run
+      - /tmp
+      - /mnt
+    environment:
+      - 'BALENAELECTRONJS_OVERLAY_DELAY=4000'
+      - 'BALENAELECTRONJS_SLEEP_BUTTON_POSITION=20,13'
+      - 'BALENAELECTRONJS_WIFI_BUTTON_POSITION=114,13'
+      - 'BALENAELECTRONJS_ZOOM_FACTOR=1.28'
+      - 'BALENAELECTRONJS_MOUNTS_ROOT=/mnt'
+      - 'BALENAELECTRONJS_CONSTRAINT_PATH=/mnt'
+      - 'ELECTRON_ENABLE_LOGGING=1'
+      - 'UDEV=1'
+      - 'BALENAELECTRONJS_SCREENSAVER_ON_COMMAND=screensaver_on.sh'
+      - 'BALENAELECTRONJS_SCREENSAVER_OFF_COMMAND=screensaver_off.sh'
