@@ -4,6 +4,8 @@ volumes:
     etcher_config:
     etcher_gnupg:
     etcher_pki:
+    influxdb:
+    grafana:
 services:
   etcher:
     build: .
@@ -37,3 +39,33 @@ services:
       - 'BALENAELECTRONJS_UPDATES_ONLY_DURING_SCREENSAVER=1'
       - 'BALENAELECTRONJS_SCREENSAVER_ON_COMMAND=screensaver_on.sh'
       - 'BALENAELECTRONJS_SCREENSAVER_OFF_COMMAND=screensaver_off.sh'
+  influxdb:
+    restart: always
+    build: ./etcher-pro-monitoring/influxdb
+    network_mode: host
+    volumes:
+      - 'influxdb:/data'
+  grafana:
+    restart: always
+    build: ./etcher-pro-monitoring/grafana
+    network_mode: host
+    volumes:
+      - 'grafana:/data'
+    environment:
+      - 'GF_SERVER_HTTP_PORT=80'
+      - 'GF_PATHS_PROVISIONING=/usr/src/app/provisioning'
+      - 'GF_SESSION_PROVIDER=memory'
+  collectd:
+    build: ./etcher-pro-monitoring/collectd
+    privileged: true
+    restart: always
+    network_mode: host
+  beep:
+    build: ./etcher-pro-monitoring/beep
+    privileged: true
+    restart: no
+  benchmark:
+    build: ./etcher-pro-monitoring/benchmark
+    privileged: true
+    restart: always
+    network_mode: host
