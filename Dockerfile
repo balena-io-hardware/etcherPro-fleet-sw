@@ -18,7 +18,7 @@ COPY etcher/tsconfig.webpack.json etcher/webpack.config.ts etcher/electron-build
 RUN npm run webpack
 RUN PATH=$(pwd)/node_modules/.bin/:$PATH electron-builder --dir --config.asar=false --config.npmRebuild=false --config.nodeGypRebuild=false
 
-FROM balenablocks/aarch64-balena-electron-env:v1.0.6
+FROM balenablocks/aarch64-balena-electron-env:v1.1.4
 
 COPY update-config-and-start.js zram.sh /usr/src/app/
 COPY screensaver_on.sh screensaver_off.sh /usr/bin/
