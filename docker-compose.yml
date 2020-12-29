@@ -1,10 +1,9 @@
 version: '2'
 volumes:
-    etcher_pki:
     etcher_cache:
-    etcher_bash_history:
-    etcher_config_electron:
-    etcher_config_balena_etcher:
+    etcher_config:
+    etcher_gnupg:
+    etcher_pki:
 services:
   etcher:
     build: .
@@ -15,12 +14,12 @@ services:
       io.balena.features.dbus: 1
       io.balena.features.supervisor-api: 1
     volumes:
-      - 'etcher_pki:/root/.pki'
       - 'etcher_cache:/root/.cache'
-      - 'etcher_bash_history:/root/.bash_history'
-      - 'etcher_config_electron:/root/.config/Electron'
-      - 'etcher_config_balena_etcher:/root/.config/balena-etcher'
+      - 'etcher_config:/root/.config'
+      - 'etcher_gnupg:/root/.gnupg'
+      - 'etcher_pki:/root/.pki'
     tmpfs:
+      - /host
       - /run
       - /tmp
       - /mnt
