@@ -1,6 +1,7 @@
 const { spawn } = require('child_process');
 const { promises: fs } = require('fs');
 const http = require('http');
+const { dirname } = require('path');
 const { env } = require('process');
 
 const {
@@ -117,6 +118,7 @@ async function getOsVersion() {
 
 async function writeConfigFile(config) {
 	let currentConfig = {};
+	await fs.mkdir(dirname(CONFIG_FILE_PATH), { recursive: true });
 	try {
 		currentConfig = JSON.parse(await fs.readFile(CONFIG_FILE_PATH, { encoding: 'utf8' }));
 	} catch (error) {
