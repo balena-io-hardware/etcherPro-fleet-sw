@@ -1,6 +1,7 @@
 const { spawn } = require('child_process');
 const { promises: fs } = require('fs');
 const http = require('http');
+const { dirname } = require('path');
 const { env } = require('process');
 
 const {
@@ -10,6 +11,25 @@ const {
 } = env;
 
 const CONFIG_FILE_PATH = '/root/.config/balena-etcher/config.json';
+
+const drivesOrder2_3_x = [
+	'platform-33800000.pcie-pci-0000:01:00.0-usb-0:2:1.0-scsi-0:0:0:0',
+	'platform-xhci-hcd.1.auto-usb-0:1.7:1.0-scsi-0:0:0:0',
+	'platform-xhci-hcd.0.auto-usb-0:1.7:1.0-scsi-0:0:0:0',
+	'platform-xhci-hcd.1.auto-usb-0:1.5:1.0-scsi-0:0:0:0',
+	'platform-xhci-hcd.0.auto-usb-0:1.5:1.0-scsi-0:0:0:0',
+	'platform-xhci-hcd.1.auto-usb-0:1.4:1.0-scsi-0:0:0:0',
+	'platform-xhci-hcd.0.auto-usb-0:1.4:1.0-scsi-0:0:0:0',
+	'platform-xhci-hcd.1.auto-usb-0:1.3:1.0-scsi-0:0:0:0',
+	'platform-xhci-hcd.0.auto-usb-0:1.3:1.0-scsi-0:0:0:0',
+	'platform-xhci-hcd.1.auto-usb-0:1.2:1.0-scsi-0:0:0:0',
+	'platform-xhci-hcd.0.auto-usb-0:1.2:1.0-scsi-0:0:0:0',
+	'platform-xhci-hcd.1.auto-usb-0:1.1:1.0-scsi-0:0:0:0',
+	'platform-xhci-hcd.0.auto-usb-0:1.1:1.0-scsi-0:0:0:0',
+	'platform-33800000.pcie-pci-0000:01:00.0-usb-0:1:1.0-scsi-0:0:0:0',
+	'platform-33800000.pcie-pci-0000:01:00.0-usb-0:4:1.0-scsi-0:0:0:0',
+	'platform-33800000.pcie-pci-0000:01:00.0-usb-0:3:1.0-scsi-0:0:0:0',
+];
 
 const db = {
 	default: {
@@ -60,24 +80,12 @@ const db = {
 	},
 	'2.3.1': {
 		default: {
-			drivesOrder: [
-				'platform-33800000.pcie-pci-0000:01:00.0-usb-0:2:1.0-scsi-0:0:0:0',
-				'platform-xhci-hcd.1.auto-usb-0:1.7:1.0-scsi-0:0:0:0',
-				'platform-xhci-hcd.0.auto-usb-0:1.7:1.0-scsi-0:0:0:0',
-				'platform-xhci-hcd.1.auto-usb-0:1.5:1.0-scsi-0:0:0:0',
-				'platform-xhci-hcd.0.auto-usb-0:1.5:1.0-scsi-0:0:0:0',
-				'platform-xhci-hcd.1.auto-usb-0:1.4:1.0-scsi-0:0:0:0',
-				'platform-xhci-hcd.0.auto-usb-0:1.4:1.0-scsi-0:0:0:0',
-				'platform-xhci-hcd.1.auto-usb-0:1.3:1.0-scsi-0:0:0:0',
-				'platform-xhci-hcd.0.auto-usb-0:1.3:1.0-scsi-0:0:0:0',
-				'platform-xhci-hcd.1.auto-usb-0:1.2:1.0-scsi-0:0:0:0',
-				'platform-xhci-hcd.0.auto-usb-0:1.2:1.0-scsi-0:0:0:0',
-				'platform-xhci-hcd.1.auto-usb-0:1.1:1.0-scsi-0:0:0:0',
-				'platform-xhci-hcd.0.auto-usb-0:1.1:1.0-scsi-0:0:0:0',
-				'platform-33800000.pcie-pci-0000:01:00.0-usb-0:1:1.0-scsi-0:0:0:0',
-				'platform-33800000.pcie-pci-0000:01:00.0-usb-0:4:1.0-scsi-0:0:0:0',
-				'platform-33800000.pcie-pci-0000:01:00.0-usb-0:3:1.0-scsi-0:0:0:0',
-			],
+			drivesOrder: drivesOrder2_3_x,
+		},
+	},
+	'2.3.2': {
+		default: {
+			drivesOrder: drivesOrder2_3_x,
 		},
 	},
 }
@@ -110,6 +118,7 @@ async function getOsVersion() {
 
 async function writeConfigFile(config) {
 	let currentConfig = {};
+	await fs.mkdir(dirname(CONFIG_FILE_PATH), { recursive: true });
 	try {
 		currentConfig = JSON.parse(await fs.readFile(CONFIG_FILE_PATH, { encoding: 'utf8' }));
 	} catch (error) {

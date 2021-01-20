@@ -9,3 +9,5 @@ Runs [balenaEtcher](https://github.com/balena-io/etcher/) on EtcherPro hardware 
 ## How ?
 
 Push this to your balena application using [balena-cli](https://github.com/balena-io/balena-cli/): `balena push <your-application-name>`.
+
+Set the `ETCHER_PRO_VERSION` env var to your hardware version on the dashboard.

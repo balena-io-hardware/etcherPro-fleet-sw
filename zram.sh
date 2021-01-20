@@ -1,7 +1,11 @@
 #!/bin/bash
 
 DEVICE=/dev/zram0
-${ZRAM_SIZE:=1G}
+ZRAM_SIZE=${ZRAM_SIZE:=1G}
+
+if ! zramctl $DEVICE; then
+        exit
+fi
 
 CURRENT_SIZE=$(zramctl --raw --noheadings --output DISKSIZE $DEVICE)
 
