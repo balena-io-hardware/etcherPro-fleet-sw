@@ -77,6 +77,9 @@ const db = {
 		'2.62.0+rev1': {
 			xrandrArgs: '-o inverted -x',
 		},
+		'2.67.0+rev1': {
+			xrandrArgs: '-o inverted -x',
+    },
 	},
 	'2.3.1': {
 		default: {
