@@ -19,7 +19,7 @@ COPY etcher/tsconfig.webpack.json etcher/webpack.config.ts etcher/electron-build
 RUN npm run webpack
 RUN PATH=$(pwd)/node_modules/.bin/:$PATH electron-builder --dir --config.asar=false --config.npmRebuild=false --config.nodeGypRebuild=false
 
-FROM balenablocks/aarch64-balena-electron-env:v1.2.5
+FROM balenablocks/aarch64-balena-electron-env:v1.2.6
 
 COPY --from=builder /usr/src/etcher/dist/linux-arm64-unpacked/resources/app /usr/src/app
 COPY --from=builder /usr/src/etcher/node_modules/electron/ /usr/src/app/node_modules/electron
