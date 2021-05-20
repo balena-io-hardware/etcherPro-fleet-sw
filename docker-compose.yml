@@ -15,7 +15,7 @@ services:
       io.balena.features.supervisor-api: 1
     volumes:
       - 'etcher_cache:/root/.cache'
-      - 'etcher_config:/root/.config'
+      - 'etcher_config:/root/.config/balena-etcher'
       - 'etcher_gnupg:/root/.gnupg'
       - 'etcher_pki:/root/.pki'
     tmpfs:
