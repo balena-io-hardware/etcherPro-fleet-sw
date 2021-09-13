@@ -151,9 +151,8 @@ async function main() {
 	}
 	await writeConfigFile({ ...rest, ledsMapping, automountOnFileSelect, drivesOrder });
 	const xinit = spawn('xinit', [], { stdio: 'inherit', env: { XRANDR_ARGS: xrandrArgs, ...env } });
-	xinit.on('close', (code: number | undefined) => {
-		process.exitCode = code;
-	});
+	xinit.on('close', (code) => process.exitCode = code || undefined);
+	xinit.on('error', (err) => console.error('Error starting xinit, reason:', err.stack))
 }
 
 main();
