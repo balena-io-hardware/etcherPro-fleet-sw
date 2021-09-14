@@ -1,0 +1,23 @@
+{
+  "name": "etcherproapplication",
+  "version": "1.0.0",
+  "description": "balenaEtcher on EtcherPro hardware",
+  "main": "update-config-and-start.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/balena-io-hardware/EtcherProApplication.git"
+  },
+  "author": "balena.io",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/balena-io-hardware/EtcherProApplication/issues"
+  },
+  "homepage": "https://github.com/balena-io-hardware/EtcherProApplication#readme",
+  "devDependencies": {
+    "@types/node": "^16.7.1",
+    "typescript": "^4.3.5"
+  }
+}

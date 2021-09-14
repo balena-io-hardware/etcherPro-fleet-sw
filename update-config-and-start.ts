@@ -1,14 +1,10 @@
-const { spawn } = require('child_process');
-const { promises: fs } = require('fs');
-const http = require('http');
-const { dirname } = require('path');
-const { env } = require('process');
-
-const {
-	BALENA_SUPERVISOR_ADDRESS,
-	BALENA_SUPERVISOR_API_KEY,
-	ETCHER_PRO_VERSION,  // TODO: get etcher pro version from somewhere else
-} = env;
+import { spawn } from 'child_process';
+import { promises as fs } from 'fs';
+import * as http from 'http';
+import { dirname } from 'path';
+import { env } from 'process';
+import { Stream } from 'stream';
+import { URL } from 'url';
 
 const CONFIG_FILE_PATH = '/root/.config/balena-etcher/config.json';
 
@@ -31,24 +27,34 @@ const drivesOrder2_3_x = [
 	'platform-33800000.pcie-pci-0000:01:00.0-usb-0:3:1.0-scsi-0:0:0:0',
 ];
 
+const defaultHWConfig = {
+	autoSelectAllDrives: true,
+	desktopNotifications: false,
+	disableExternalLinks: true,
+	driveBlacklist: [
+		'/dev/mmcblk0rpmb',
+		'/dev/mmcblk0',
+		'/dev/mmcblk0boot0',
+		'/dev/mmcblk0boot1',
+	],
+	featuredProjectEndpoint: 'nothing://',
+	successBannerURL: '',
+	fullscreen: true,
+	ledsOrder: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+	drivesOrder: drivesOrder2_3_x,
+	xrandrArgs: '',
+};
+
 const db = {
+	// key: hw version
 	default: {
-		autoSelectAllDrives: true,
-		desktopNotifications: false,
-		disableExternalLinks: true,
-		driveBlacklist: [
-			'/dev/mmcblk0rpmb',
-			'/dev/mmcblk0',
-			'/dev/mmcblk0boot0',
-			'/dev/mmcblk0boot1',
-		],
-		featuredProjectEndpoint: 'nothing://',
-		successBannerURL: '',
-		fullscreen: true,
-		ledsOrder: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+		// key: os version
+		default: defaultHWConfig
 	},
 	'2.2.2': {
 		default: {
+			...defaultHWConfig,
+			// xrandrArgs: '-o inverted -x',
 			drivesOrder: [
 				'platform-xhci-hcd.1.auto-usb-0:1.1.1:1.0-scsi-0:0:0:0',
 				'platform-xhci-hcd.1.auto-usb-0:1.1.2:1.0-scsi-0:0:0:0',
@@ -68,36 +74,30 @@ const db = {
 				'platform-xhci-hcd.0.auto-usb-0:1.2.4:1.0-scsi-0:0:0:0',
 			],
 		},
-		'2.58.3+rev3': {
-			xrandrArgs: '-o inverted -x',
-		},
-		'2.58.3+rev4': {
-			xrandrArgs: '-o inverted -x',
-		},
-		'2.62.0+rev1': {
-			xrandrArgs: '-o inverted -x',
-		},
-		'2.67.0+rev1': {
-			xrandrArgs: '-o inverted -x',
-		},
-	},
-	'2.3.1': {
-		default: {
-			drivesOrder: drivesOrder2_3_x,
-		},
-	},
-	'2.3.2': {
-		default: {
-			drivesOrder: drivesOrder2_3_x,
-		},
 	},
 }
 
-function streamToString(stream) {
+type TMPDB = typeof db;
+
+type HWVersion = keyof TMPDB;
+
+type OSVersion = keyof TMPDB[HWVersion];
+
+interface TypedProcessEnv extends NodeJS.ProcessEnv {
+	ETCHER_PRO_VERSION?: HWVersion;
+}
+
+const {
+	BALENA_SUPERVISOR_ADDRESS,
+	BALENA_SUPERVISOR_API_KEY,
+	ETCHER_PRO_VERSION = 'default',  // TODO: get etcher pro version from somewhere else
+}: TypedProcessEnv = env;
+
+function streamToString(stream: Stream): Promise<string> {
 	return new Promise((resolve, reject) => {
-		const chunks = [];
+		const chunks: any[] = [];
 		stream.on('error', reject);
-		stream.on('data', (chunk) => {
+		stream.on('data', (chunk: any) => {
 			chunks.push(chunk);
 		});
 		stream.on('end', () => {
@@ -106,20 +106,20 @@ function streamToString(stream) {
 	});
 }
 
-function get(url, options) {
+function get(url: string | URL, options: http.RequestOptions): Promise<Stream> {
 	return new Promise((resolve, reject) => {
 		http.get(url, options, resolve).on('error', reject);
 	});
 }
 
-async function getOsVersion() {
+async function getOsVersion(): Promise<OSVersion> {
 	const url = `${BALENA_SUPERVISOR_ADDRESS}/v1/device`;
 	const headers = { Authorization: `Bearer ${BALENA_SUPERVISOR_API_KEY}` };
 	const response = await get(url, { headers });
 	return JSON.parse(await streamToString(response)).os_version.split(' ')[1];
 }
 
-async function writeConfigFile(config) {
+async function writeConfigFile(config: any) {
 	let currentConfig = {};
 	await fs.mkdir(dirname(CONFIG_FILE_PATH), { recursive: true });
 	try {
@@ -130,22 +130,17 @@ async function writeConfigFile(config) {
 	await fs.writeFile(CONFIG_FILE_PATH, JSON.stringify(newConfig, null, 2));
 }
 
-function zip(...arrays) {
-	return arrays[0].map((_, i) => arrays.map(array => array[i]));
+function zip(...arrays: any[][]): any[][] {
+    // @ts-ignore
+	return arrays[0].map((_: any, i: string | number) => arrays.map(array => array[i]));
 }
 
 async function main() {
 	const osVersion = await getOsVersion();
-	const defaultConfig = db.default;
-	const hw = db[ETCHER_PRO_VERSION] || {};
-	const hwDefaultConfig = hw.default || {};
-	const hwOsConfig = hw[osVersion] || {};
-	const config = { ...defaultConfig, ...hwDefaultConfig, ...hwOsConfig };
-	let drivesOrder;
-	let ledsOrder;
-	let xrandrArgs;
-	let rest = {};
-	({ drivesOrder, ledsOrder, xrandrArgs, ...rest } = config);
+	const hwConfig = db[ETCHER_PRO_VERSION] || db['default'];
+	const hwOsConfig = hwConfig[osVersion] || hwConfig['default'];
+	const config = { ...defaultHWConfig, ...hwOsConfig };
+	const { drivesOrder, ledsOrder, xrandrArgs, ...rest } = config;
 	let automountOnFileSelect;
 	let ledsMapping;
 	if (drivesOrder !== undefined) {
@@ -156,9 +151,8 @@ async function main() {
 	}
 	await writeConfigFile({ ...rest, ledsMapping, automountOnFileSelect, drivesOrder });
 	const xinit = spawn('xinit', [], { stdio: 'inherit', env: { XRANDR_ARGS: xrandrArgs, ...env } });
-	xinit.on('close', (code) => {
-		process.exitCode = code;
-	});
+	xinit.on('close', (code) => process.exitCode = code || undefined);
+	xinit.on('error', (err) => console.error('Error starting xinit, reason:', err.stack))
 }
 
 main();
