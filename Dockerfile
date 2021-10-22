@@ -1,4 +1,4 @@
-FROM balenalib/aarch64-debian-node:12.20-buster-build as builder
+FROM balenalib/aarch64-debian-node:14.17-build as build
 
 RUN apt-get update
 RUN apt-get install python jq
@@ -9,16 +9,14 @@ WORKDIR /usr/src/etcher
 
 COPY etcher/scripts scripts
 COPY etcher/typings typings
-COPY etcher/tsconfig.json etcher/npm-shrinkwrap.json etcher/package.json ./
+COPY etcher/tsconfig.json etcher/package-lock.json etcher/package.json ./
 
-ENV npm_config_disturl=https://electronjs.org/headers
-ENV npm_config_runtime=electron
-RUN npm_config_target=$(jq .devDependencies.electron package.json) npm i
+RUN npm ci
 
 WORKDIR /usr/src/app
 
 COPY package.json package-lock.json ./
-RUN npm i
+RUN npm ci
 
 # build sources
 
@@ -28,16 +26,20 @@ COPY etcher/assets assets
 COPY etcher/lib lib
 COPY etcher/tsconfig.webpack.json etcher/webpack.config.ts etcher/electron-builder.yml etcher/afterPack.js ./
 RUN npm run webpack
-RUN PATH=$(pwd)/node_modules/.bin/:$PATH electron-builder --dir --config.asar=false --config.npmRebuild=false --config.nodeGypRebuild=false
+RUN npx electron-builder --dir --config.asar=false --config.npmRebuild=false --config.nodeGypRebuild=false
 
 WORKDIR /usr/src/app
 
 COPY tsconfig.json update-config-and-start.ts ./
 RUN npx tsc update-config-and-start.ts
 
-FROM balenablocks/aarch64-balena-electron-env:v1.2.10
-COPY --from=builder /usr/src/etcher/dist/linux-arm64-unpacked/resources/app /usr/src/app
-COPY --from=builder /usr/src/etcher/node_modules/electron/ /usr/src/app/node_modules/electron
+CMD sleep infinity
+
+# use build artifacts in final image
+FROM balenablocks/aarch64-balena-electron-env:v1.2.10 as runtime
+
+COPY --from=build /usr/src/etcher/dist/linux-arm64-unpacked/resources/app /usr/src/app
+COPY --from=build /usr/src/etcher/node_modules/electron/ /usr/src/app/node_modules/electron
 
 WORKDIR /usr/src/app/node_modules/.bin
 RUN ln -s ../electron/cli.js electron
@@ -45,7 +47,7 @@ RUN ln -s ../electron/cli.js electron
 COPY zram.sh /usr/src/app/
 COPY screensaver_on.sh screensaver_off.sh /usr/bin/
 
-COPY --from=builder /usr/src/app/update-config-and-start.js /usr/src/app
+COPY --from=build /usr/src/app/update-config-and-start.js /usr/src/app
 
 WORKDIR /usr/src/app
 
