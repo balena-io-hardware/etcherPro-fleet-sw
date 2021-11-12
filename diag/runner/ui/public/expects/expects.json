@@ -1,0 +1,19 @@
+{
+    "leds": [
+        {
+            "method": "length",
+            "value": 1,
+            "op": "gt"
+        },
+        {
+            "method": "0",
+            "value": "led0",
+            "op": "eq"
+        },
+        {
+            "method": "0.length",
+            "value": 4,
+            "op": "eq"
+        }
+    ]
+}

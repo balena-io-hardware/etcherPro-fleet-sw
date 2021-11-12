@@ -44,6 +44,7 @@ RUN ln -s ../electron/cli.js electron
 
 COPY zram.sh /usr/src/app/
 COPY screensaver_on.sh screensaver_off.sh /usr/bin/
+RUN chmod +x /usr/src/app/zram.sh
 
 COPY --from=builder /usr/src/app/update-config-and-start.js /usr/src/app
 
