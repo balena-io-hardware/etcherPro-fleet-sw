@@ -37,3 +37,12 @@ services:
       - 'BALENAELECTRONJS_UPDATES_ONLY_DURING_SCREENSAVER=1'
       - 'BALENAELECTRONJS_SCREENSAVER_ON_COMMAND=screensaver_on.sh'
       - 'BALENAELECTRONJS_SCREENSAVER_OFF_COMMAND=screensaver_off.sh'
+  diag-runner:
+    build: ./diag/runner
+    privileged: true
+    labels:
+      io.balena.features.kernel-modules: '1'
+      io.balena.features.sysfs: '1'
+      io.balena.features.supervisor-api: '1'
+    ports:
+      - '8000:3000'

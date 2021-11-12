@@ -1,0 +1,56 @@
+version: '2'
+
+volumes:
+  diagnostics-results:
+
+services:
+  leds:
+    # build: ./leds
+    # privileged: true
+    # labels:
+    #   io.balena.features.kernel-modules: '1'
+    #   io.balena.features.sysfs: '1'
+    #   io.balena.features.supervisor-api: '1'
+    # volumes:
+    #   - diagnostics-results:/app/results
+    # ports:
+    #   - '8001:3000'
+  # screen:
+  #   build: ./screen
+  #   privileged: true
+  #   labels:
+  #     io.balena.features.kernel-modules: '1'
+  #     io.balena.features.sysfs: '1'
+  #     io.balena.features.supervisor-api: '1'
+  #   volumes:
+  #     - diagnostics-results:/app/results
+  #   environment:
+  #     - DISPLAY=${DISPLAY}
+  #   ports:
+  #     - '8002:1212'
+  # drive-speed:
+  #   build: ./drive-speed
+  #   privileged: true
+  #   labels:
+  #     io.balena.features.kernel-modules: '1'
+  #     io.balena.features.sysfs: '1'
+  #     io.balena.features.supervisor-api: '1'
+  #   volumes:
+  #     - diagnostics-results:/app/results
+  #   environment:
+  #     - DISPLAY=${DISPLAY}
+  #   ports:
+  #     - '8003:3000'
+  runner:
+    build: ./runner
+    privileged: true
+    labels:
+      io.balena.features.kernel-modules: '1'
+      io.balena.features.sysfs: '1'
+      io.balena.features.supervisor-api: '1'
+    volumes:
+      - diagnostics-results:/app/results
+    environment:
+      - DISPLAY=${DISPLAY}
+    ports:
+      - '80:3000'

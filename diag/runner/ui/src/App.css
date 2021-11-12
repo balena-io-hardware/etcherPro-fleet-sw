@@ -1,0 +1,31 @@
+.App {
+  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+
+.App-frame {
+  position: fixed;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  min-width: 100vw;
+  min-height: 100vh;
+  border: none;
+  margin: 0;
+  padding: 0;
+  background-color: #282c34;
+  color: white;
+}
+
+button.add-fab {
+  position: fixed !important;
+  top: 23px;
+  right: 15px;
+  height: 27px;
+  z-index: 999;
+}
