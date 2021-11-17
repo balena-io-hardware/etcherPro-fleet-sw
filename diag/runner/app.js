@@ -5,7 +5,8 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var ledsRouter = require('./routes/leds');
-var usersRouter = require('./routes/users');
+var pingRouter = require('./routes/ping');
+var drivesRouter = require('./routes/drives');
 
 var app = express();
 
@@ -16,7 +17,8 @@ app.use(cookieParser());
 
 app.use('/api', indexRouter);
 app.use('/api/leds', ledsRouter);
-app.use('/api/users', usersRouter);
+app.use('/api/ping', pingRouter);
+app.use('/api/drives', drivesRouter);
 
 // serve the UI
 app.use(express.static(path.resolve(__dirname, './ui/build')));

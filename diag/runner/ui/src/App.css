@@ -25,7 +25,15 @@
 button.add-fab {
   position: fixed !important;
   top: 23px;
-  right: 15px;
+  left: 15px;
+  height: 27px;
+  z-index: 100;
+}
+
+button.close-fab {
+  position: fixed !important;
+  top: 23px;
+  right: 25px;
   height: 27px;
   z-index: 999;
 }

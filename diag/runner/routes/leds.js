@@ -4,13 +4,13 @@ var router = express.Router();
 const fs = require('fs');
 const leds = require('sys-class-rgb-led')
 
-/* GET home page. */
+/* GET leds */
 router.get('/', (req, res, next) => {
   try {
     let leds = fs.readdirSync('/sys/class/leds');
     res.json([...leds]);
   } catch {
-    res.json(['led0', 'led1'])
+    res.sendStatus(501);
   }
 });
 
