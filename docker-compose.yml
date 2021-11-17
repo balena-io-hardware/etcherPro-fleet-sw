@@ -40,9 +40,16 @@ services:
   diag-runner:
     build: ./diag/runner
     privileged: true
+    network_mode: host
+    tmpfs:
+      - /host
+      - /run
+      - /tmp
+      - /mnt
     labels:
-      io.balena.features.kernel-modules: '1'
-      io.balena.features.sysfs: '1'
+      io.balena.features.dbus: 1
       io.balena.features.supervisor-api: '1'
+    environment:
+      - 'UDEV=1'
     ports:
       - '8000:3000'
