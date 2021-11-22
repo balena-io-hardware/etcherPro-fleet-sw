@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Button, Txt } from 'rendition'
+import { Box, Button, HighlightedName, Table, Txt } from 'rendition'
 import { FioResult } from '../iterfaces/FioResult';
 
 type DrivesPageProps = {
@@ -29,6 +29,7 @@ export const Drives = ({ autoload }: DrivesPageProps) => {
     }
 
     setFioCallStatus("inprogress");
+
     try {
       const fioRun = await fetch(`/api/drives/fio`, { 
         method: 'POST',
@@ -57,12 +58,14 @@ export const Drives = ({ autoload }: DrivesPageProps) => {
   }
 
   return (
-    <>      
+    <Box style={{overflowY: 'auto'}}>
       <Box>
         <Button onClick={() => getDrives()}>Get available drives</Button>
-      </Box> 
+      </Box>
+      <br />
       <Box>
-        <Txt bold color="#000">{drives.length} drives:</Txt>
+        <HighlightedName>{drives.length +' drives'}</HighlightedName>    
+        &nbsp;
         <Button 
           primary={fioCallStatus === "none"} 
           danger={fioCallStatus === "fail"} 
@@ -73,19 +76,42 @@ export const Drives = ({ autoload }: DrivesPageProps) => {
           Run fio
         </Button>
         <Txt italic>Takes about 30 seconds</Txt>
-        <ol style={{overflowX: 'hidden', overflowY: 'auto'}}>
+        <ol style={{paddingBottom: '20vh'}}>
         {
           fioResults.map((r, i) => 
             <li>
-              <Txt>Name: {r.jobs?.[0].jobname} </Txt>
-              <Txt>Bandwith: {r.jobs?.[0].write.bw} kb/s </Txt>
+              <Txt>Name: {r.jobs[0].jobname} | Bandwith in kb/s </Txt>
+              <Table 
+                columns={[
+                  {
+                    field: 'bw_min',
+                    label: 'min'
+                  },
+                  {
+                    field: 'bw_max',
+                    label: 'max'
+                  },
+                  {
+                    field: 'bw_mean',
+                    label: 'mean'
+                  },
+                  {
+                    field: 'bw_dev',
+                    label: 'dev'
+                  },
+                ]}
+                data={[r.jobs[0].write]}
+              />
               <Box>
-                {r.disk_util?.map(d => <Txt>Disk: {d.name} - {d.util}</Txt>)}
+                <Txt>
+                  {r.disk_util?.map(d => <>|- {d.name} : {d.util} -|</>)}
+                </Txt>
               </Box>
             </li>)
         }
         </ol>
+        <hr />
       </Box>      
-    </>
+    </Box>
   );
 };

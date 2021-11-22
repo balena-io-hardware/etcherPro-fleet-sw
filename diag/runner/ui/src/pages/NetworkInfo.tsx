@@ -11,15 +11,25 @@ export const NetworkInfo = () => {
     })
 
     const getNetworkInfo = async () => {
-      const netRes = await fetch(`/api/network`);
-      setNetworkInfo(await netRes.json())
+      try {
+        const netRes = await fetch(`/api/network`);
+        setNetworkInfo(await netRes.json())
+      } catch (err) {
+        // call or parsing failed
+      }
     }
 
     return (
       <Box style={{overflowY: 'auto', paddingBottom: '50vh'}}>
         <Accordion
           items={Object.keys(networkInfo)
-            .map(n => ({ label: n, panel: <Txt>{JSON.stringify(networkInfo[n])}</Txt>})) as any}
+            .map(n => ({ label: n, panel: 
+              <ol>
+                {networkInfo[n].map((i: any) => 
+                  <li><Txt>{JSON.stringify(i)}</Txt></li>)
+                }
+              </ol>})
+            ) as any}
         />           
       </Box>
     );

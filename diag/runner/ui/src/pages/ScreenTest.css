@@ -35,10 +35,6 @@
     cursor: pointer;
     opacity: 0.9;
   }
-    
-  li {
-    list-style: none;
-  }
   
   a {
     text-decoration: none;
