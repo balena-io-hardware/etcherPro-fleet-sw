@@ -1,23 +1,29 @@
 import { ReactElement } from 'react';
+import { useLocation } from 'react-router-dom';
 import './ScreenTest.css';
 
 export const ScreenTest = ({ tiles }: any ) => {
-
+    const location = useLocation()
     let rowsCount = 3;
 
-    if (tiles) {
-      console.log(3, tiles);
-      
+    if (tiles) {      
       rowsCount = tiles;
-    }    
-  
-    const setBackground = (e: EventTarget) => {
-      (e as HTMLDivElement).style.backgroundColor = 'green'
+    } else if (location.search.indexOf('rows') > -1) {
+      const query = new URLSearchParams(location.search)
+      rowsCount = parseInt(query.get('rows') as string)
+    }
+
+    const toggleBg = (e: EventTarget) => {
+      if ((e as HTMLDivElement).style.backgroundColor === 'green' ) {
+        (e as HTMLDivElement).style.backgroundColor = 'transparent'
+      } else {
+        (e as HTMLDivElement).style.backgroundColor = 'green'
+      }
     }
 
     let cols: ReactElement[] = [];  
     let rows: ReactElement[][] = [];  
-    let col = (key: number):ReactElement => <div key={key} className="screen-test-cell" onClick={(e) => setBackground(e.target)}></div>    
+    let col = (key: number):ReactElement => <div key={key} className="screen-test-cell" onClick={(e) => toggleBg(e.target)}></div>    
 
     for (let i=0; i<rowsCount; ++i) {
       cols.push(col(i))

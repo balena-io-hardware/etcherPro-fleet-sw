@@ -6,6 +6,7 @@ COPY . .
 RUN npm install 
 RUN apt-get update
 RUN apt-get -y install fio
+RUN chmod +x ./start.sh
 #RUN cd ui && npm i && npm run build
 
-CMD ["node", "./bin/www"]
+CMD ["./start.sh"]

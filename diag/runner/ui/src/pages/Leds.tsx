@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Button } from 'rendition'
+import { Box, Button, ButtonGroup, Flex } from 'rendition'
 
 type LedsPageProps = {
   autoload?: Boolean
@@ -12,12 +12,16 @@ export const Leds = ({ autoload }: LedsPageProps) => {
     if (autoload) {
       getLeds();
     }
-  }, [])
+  }, [autoload])
 
   const getLeds = async () => {
-    const res = await fetch(`/api/leds`)
-    const ledResponse = await res.json()
-    setLeds(ledResponse);
+    try {
+      const res = await fetch(`/api/leds`)
+      const ledResponse = await res.json()
+      setLeds(ledResponse);
+    } catch (err) {
+      // cant get leds
+    }    
   }
 
   const callLed = async (l: string, dashedIntensityOfColors: string) => {
@@ -36,7 +40,6 @@ export const Leds = ({ autoload }: LedsPageProps) => {
       }),
       headers: {
         'Content-Type': 'application/json'
-        // 'Content-Type': 'application/x-www-form-urlencoded',
       },
     })
   }
@@ -55,14 +58,17 @@ export const Leds = ({ autoload }: LedsPageProps) => {
         <Button primary onClick={() => callAllLed('0-0-99')}>blue</Button>&nbsp; 
         <Button onClick={() => callAllLed('0-0-0')}>off</Button>&nbsp; 
       </Box>
-      <ol>
+      
+      <Flex flexDirection='row' flexWrap="wrap" style={{padding: '5px', overflowY: 'auto', overflowX: 'hidden'}}>
         {leds && leds.length ? 
-          leds.map(led => <li style={{margin: '5px'}}>
-            {led}: &nbsp;
-            <Button success onClick={() => callLed(led, '00-0-99')}>on</Button>&nbsp;
-            <Button outline onClick={() => callLed(led, '0-00-0')}>off</Button>
-          </li>) : <></>}
-      </ol>
+          leds.map(led => <Box>
+            <ButtonGroup>
+              <Button success onClick={() => callLed(led, '00-0-99')}>{led} on</Button>
+              <Button outline onClick={() => callLed(led, '0-00-0')}>off</Button>
+            </ButtonGroup>
+          </Box>) : <></>}
+      </Flex>
+     
     </>
   );
 };

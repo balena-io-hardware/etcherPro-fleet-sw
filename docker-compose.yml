@@ -4,6 +4,7 @@ volumes:
     etcher_config:
     etcher_gnupg:
     etcher_pki:
+    diag_store:
 services:
   etcher:
     build: .
@@ -18,6 +19,7 @@ services:
       - 'etcher_config:/root/.config/balena-etcher'
       - 'etcher_gnupg:/root/.gnupg'
       - 'etcher_pki:/root/.pki'
+      - diag_store:/usr/src/diag-data
     tmpfs:
       - /host
       - /run
@@ -46,6 +48,8 @@ services:
       - /run
       - /tmp
       - /mnt
+    volumes:
+      - diag_store:/usr/src/diag-data
     labels:
       io.balena.features.dbus: 1
       io.balena.features.supervisor-api: '1'

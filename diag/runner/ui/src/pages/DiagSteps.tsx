@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Route, Switch, useRouteMatch, useHistory } from 'react-router-dom';
-import { Button, Steps, Step, Box } from 'rendition'
+import { Route, Switch, useRouteMatch, useHistory, useLocation } from 'react-router-dom';
+import { Button, Steps, Step } from 'rendition'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Leds } from './Leds';
 import { Drives } from './Drives';
+import { NetworkInfo } from './NetworkInfo';
 
 export const DiagSteps = () => {
     const [currentStep, setCurrentStep] = useState<number>(0);
@@ -12,6 +13,8 @@ export const DiagSteps = () => {
 
     const { path } = useRouteMatch()
     let history = useHistory()
+    let location = useLocation()
+    const query = new URLSearchParams(location.search);
     
     const nextStep = (toSlug: string) => {
       setCurrentStep(currentStep + 1);
@@ -43,6 +46,9 @@ export const DiagSteps = () => {
           <Step status={currentStep > 2 ? "completed" : "pending"}>
             Drives
           </Step>
+          <Step status={currentStep > 3 ? "completed" : "pending"}>
+            Network
+          </Step>
           <Step status="pending">
             Serial
           </Step>
@@ -55,23 +61,43 @@ export const DiagSteps = () => {
           </Route>
           <Route path={`${path}/screen`}>
             <Button primary onClick={() => nextStep('drives')}>Insert all the drives and Next</Button>
+            <br />
+            <Button primary onClick={() => openScreenFrame()}>Open screen test</Button>
             {showScreen ? <>
               <Button 
                 primary
                 onClick={() => closeScreenFrame()}
                 className="add-fab"
                 padding='13px'
-                style={{ borderRadius: '100%'}}
-                width={23}
+                width={23}  
+                style={{ zIndex: 9999 }}              
                 icon={<FontAwesomeIcon icon={faTimes}/>}
-                />
-              <iframe className="App-frame" src={`/screen`} title='screen' key="screen-frame"></iframe>
+              />/
+              <Button 
+                success
+                onClick={() => { closeScreenFrame(); nextStep('drives') }}
+                className="add-fab"
+                padding='13px'               
+                
+                icon={<FontAwesomeIcon icon={faTimes}/>}
+              >Close and next</Button>
+              <iframe 
+                className="App-frame" 
+                src={location.search.indexOf('rows') > -1 ? `/screen?rows=${query.get('rows')}` : '/screen'} 
+                title='screen' 
+                key="screen-frame"
+              ></iframe>
             </> : <></>}
           </Route>
           <Route path={`${path}/drives`}>
-            <Button primary onClick={() => nextStep('serial')}>Next</Button>
+            <Button primary onClick={() => nextStep('network')}>Next</Button>
             <br />
             <Drives autoload/>
+          </Route>
+          <Route path={`${path}/network`}>
+            <Button primary onClick={() => nextStep('serial')}>Next</Button>
+            <br />
+            <NetworkInfo/>
           </Route>
           <Route path={`${path}/serial`}>
             serial TBD
