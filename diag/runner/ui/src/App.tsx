@@ -20,6 +20,7 @@ import { ScreenTest } from './pages/ScreenTest'
 import { DiagSteps } from './pages/DiagSteps';
 import { Leds } from './pages/Leds';
 import { Drives } from './pages/Drives';
+import { NetworkInfo } from './pages/NetworkInfo';
 
 function App() {
   const [showScreen, setShowScreen] = useState(false);
@@ -153,6 +154,13 @@ function App() {
                     panel: 
                       <>
                         <Drives />
+                      </>
+                  },
+                  {
+                    label: 'Network',
+                    panel: 
+                      <>
+                        <NetworkInfo />
                       </>
                   },
                   {

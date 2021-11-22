@@ -4,7 +4,7 @@ export interface FioResult {
     timestamp_ms: number;
     time: string;
     GlobalOptions: GlobalOptions;
-    jobs?: (JobsEntity)[] | null;
+    jobs: (JobsEntity)[];
     disk_util?: (DiskUtilEntity)[] | null;
   }
   export interface GlobalOptions {
@@ -88,23 +88,23 @@ export interface FioResult {
     percentile: Percentile;
   }
   export interface Percentile {
-    1.000000: number;
-    5.000000: number;
-    10.000000: number;
-    20.000000: number;
-    30.000000: number;
-    40.000000: number;
-    50.000000: number;
-    60.000000: number;
-    70.000000: number;
-    80.000000: number;
-    90.000000: number;
-    95.000000: number;
-    99.000000: number;
-    99.500000: number;
-    99.900000: number;
-    99.950000: number;
-    99.990000: number;
+    "1.000000": number;
+    "5.000000": number;
+    "10.000000": number;
+    "20.000000": number;
+    "30.000000": number;
+    "40.000000": number;
+    "50.000000": number;
+    "60.000000": number;
+    "70.000000": number;
+    "80.000000": number;
+    "90.000000": number;
+    "95.000000": number;
+    "99.000000": number;
+    "99.500000": number;
+    "99.900000": number;
+    "99.950000": number;
+    "99.990000": number;
   }
   export interface Sync {
     lat_ns: ClatNsOrLatNs;
