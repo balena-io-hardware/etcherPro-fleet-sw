@@ -7,8 +7,12 @@ class DiagResult {
     _data;
 
     constructor(name, filepath) {
+        if (!filepath) {
+            filepath = '/usr/src'
+        }
+
         this._name = name
-        this._path = filepath ? filepath : path.join(__dirname, '..', 'diag-data', 'history', name)
+        this._path = path.join(filepath, 'diag-data', 'history', name)
     }
 
     #createDateFolder = (date) => `${date.getFullYear()}_${date.getMonth()}_${date.getDay()}`;
