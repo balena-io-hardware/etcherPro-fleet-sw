@@ -79,38 +79,41 @@ export const Drives = ({ autoload }: DrivesPageProps) => {
         <ol style={{paddingBottom: '20vh'}}>
         {
           fioResults.map((r, i) => 
-            <li>
-              <Txt>Name: {r.jobs[0].jobname} | Bandwith in kb/s </Txt>
-              <Table 
-                columns={[
-                  {
-                    field: 'bw_min',
-                    label: 'min'
-                  },
-                  {
-                    field: 'bw_max',
-                    label: 'max'
-                  },
-                  {
-                    field: 'bw_mean',
-                    label: 'mean'
-                  },
-                  {
-                    field: 'bw_dev',
-                    label: 'dev'
-                  },
-                ]}
-                data={[r.jobs[0].write]}
-              />
-              <Box>
-                <Txt>
-                  {r.disk_util?.map(d => <>|- {d.name} : {d.util} -|</>)}
-                </Txt>
-              </Box>
-            </li>)
+            <>
+              <li>
+                <Txt>Name: {r.jobs[0].jobname} | Bandwith in kb/s </Txt>
+                <Table 
+                  columns={[
+                    {
+                      field: 'bw_min',
+                      label: 'min'
+                    },
+                    {
+                      field: 'bw_max',
+                      label: 'max'
+                    },
+                    {
+                      field: 'bw_mean',
+                      label: 'mean'
+                    },
+                    {
+                      field: 'bw_dev',
+                      label: 'dev'
+                    },
+                  ]}
+                  data={[r.jobs[0].write]}
+                />
+                <Box>
+                  <Txt>
+                    {r.disk_util?.map(d => <>|- {d.name} : {d.util} -|</>)}
+                  </Txt>
+                </Box>
+              </li>
+              <hr />
+            </>
+            )
         }
         </ol>
-        <hr />
       </Box>      
     </Box>
   );
