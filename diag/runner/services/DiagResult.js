@@ -44,8 +44,6 @@ class DiagResult {
             currentPath = path.join(this._path, slug)
         }  
 
-        console.log(this, currentPath)
-
         try {
             const res = fs.readdirSync(currentPath)
     
