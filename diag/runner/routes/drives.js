@@ -6,6 +6,8 @@ var path = require('path');
 var { promisify } = require('util')
 var execFileAsync = promisify(process.execFile);
 
+var DiagHistory = require('../services/DiagResult').DiagHistory
+
 
 /* GET sd[a-z] drives */
 router.get('/', async (req, res, next) => {
@@ -60,6 +62,11 @@ router.post('/fio', async (req, res, next) => {
 
   const { stdout } = await execFileAsync('fio', parameters)
   try {
+    DiagHistory
+      .createDrivesResult
+      .withData(stdout)
+      .persist()
+
     fs.writeFileSync(path.join(__dirname, 'last_fio_result.json'), stdout)
   } catch (err) {
     console.error(err)
@@ -78,6 +85,26 @@ router.get('/fio/last', async (req, res, next) => {
     console.error(err)
     res.sendStatus(501);
   }
+})
+
+router.get('/results/list', (req, res, next) => {
+  let entries = DiagHistory.listDrivesForDate()
+
+  res.json(entries)
+})
+
+router.get('/results/list/:date', (req, res, next) => {
+  const { date } = req.params
+  let entries = DiagHistory.listDrivesForDate(date)
+
+  res.json(entries)
+})
+
+router.get('/results/view/:fileName', (req, res, next) => {
+  const { fileName } = req.params
+  let content = DiagHistory.readDrivesFile(fileName)
+
+  res.send(content)
 })
 
 module.exports = router;
