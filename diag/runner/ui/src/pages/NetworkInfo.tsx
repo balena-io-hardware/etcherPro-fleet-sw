@@ -8,7 +8,7 @@ export const NetworkInfo = () => {
       (async () => {
         await getNetworkInfo()
       })()
-    })
+    }, [])
 
     const getNetworkInfo = async () => {
       try {
