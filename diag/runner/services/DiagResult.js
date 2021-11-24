@@ -15,7 +15,7 @@ class DiagResult {
         this._path = path.join(filepath, 'diag-data', 'history', name)
     }
 
-    #createDateFolder = (date) => `${date.getFullYear()}_${date.getMonth()}_${date.getDay()}`;
+    #createDateFolder = (date) => `${date.getFullYear()}_${date.getMonth()}_${date.getDate()}`;
 
     withData(data) {
         if (this._data) {
