@@ -1,0 +1,266 @@
+swagger: "2.0"
+info:
+  description: "Diagnostics api"
+  version: "0.0.0"
+  title: "HW Diag"
+basePath: "/api"
+
+paths:
+  /:
+    get:
+      tags:
+      - "index"
+      summary: "Nothing to do here"
+      description: "Returns 403 to show it is there"
+      operationId: "index"
+      responses:
+        "403":
+          description: "successful operation"
+  /ping:
+    get:
+      tags:
+      - "ping"
+      summary: "Ping"
+      description: "Returns 200 to show it is there"
+      operationId: "ping"
+      responses:
+        "200":
+          description: "successful operation"
+  /leds:
+    get:
+      tags:
+      - "leds"
+      summary: "List all leds"
+      description: "Returns all leds defined in /sys/class/leds"
+      operationId: "getLeds"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: "array"
+            items: 
+              type: "string"
+            example: ["led0", "led1", "..."]
+        "501":
+          description: "Error opening the directory"
+  /leds/{name}/{color}:
+    put:
+      tags:
+      - "leds"
+      summary: "Set the one led's color"
+      description: "Set the intensity of a led"
+      operationId: "updateLedColor"
+      parameters:
+      - name: "name"
+        in: "path"
+        description: "Name of the led"
+        required: true
+        type: "string"
+      - name: "color"
+        in: "path"
+        description: "intensity between 1 and 100"
+        required: true
+        type: "integer"
+        minimum: 0
+        maximum: 100
+      responses:
+        "200":
+          description: "Success"
+        "501":
+          description: "Error accessing led or parsing parameter"
+  /leds/all/{color}:
+    post:
+      tags:
+      - "leds"
+      summary: "Set multiple leds' color"
+      description: ""
+      operationId: "setLedsColor"
+      parameters:
+      - name: "color"
+        in: "path"
+        description: "Dash separated intensity between 1 and 100; 69-69-69"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        schema:
+          type: "object"
+          properties:
+            names: 
+              type: "array"
+              items:
+                type: "string"
+              description: "List of led names without color postfix"
+              example: ["led0", "led1"]
+            separator:
+              type: "string"
+              description: "Separator character(s) between led name and color postfix"
+              example: "_"
+            rString:
+              type: "string"
+              description: "Red color postfix"
+              example: "r"
+            gString:
+              type: "string"
+              description: "Green color postfix"
+              example: "g"
+            bString:
+              type: "string"
+              description: "Blue color postfix"
+              example: "b"
+      responses:
+        "200":
+          description: "Success"
+        "501":
+          description: "Error accessing led or parsing parameter"
+  /drives:
+    get:
+      tags:
+      - "drives"
+      summary: "List all drives"
+      description: "Returns all drives from `/dev/sd(.){1}`"
+      operationId: "getDrives"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: "array"
+            items: 
+              type: "string"
+            example: ["/dev/sda", "/dev/sdb", "..."]
+        "501":
+          description: "Error opening the directory"
+  /drives/fio:
+    post:
+      tags:
+      - "drives"
+      summary: "Start fio run"
+      description: "Run `fio` on the devices provided in the parameters."
+      operationId: "runFioOnDrives"
+      parameters:
+      - in: "body"
+        name: "body"
+        schema:
+          type: "object"
+          properties:
+            devices: 
+              type: "array"
+              items:
+                type: "string"
+              description: "List devices to test; `--filename` parameter of fio "
+              example: ["/dev/sda", "/dev/sdb"]
+            direct:
+              type: "integer"
+              description: "`--direct` parameter of fio"
+              minimum: 0
+              maximum: 1
+              example: 0
+            rw:
+              type: "string"
+              description: "`--rw` parameter of fio; default:'write'"
+              example: "write"
+            bs:
+              type: "string"
+              description: "`--bs` param of fio; blocksize"
+              example: "4k"
+            runtime:
+              type: "integer"
+              description: "Runtime in miliseconds `--runtime`"
+              example: 30
+            numjobs:
+              type: "integer"
+              description: "Number of processes to invoke"
+              example: 8
+            name:
+              type: "string"
+              description: "The name/title of the testrun"
+              example: "etcher_test_2021_02_02_1011"
+            size:
+              type: "string"
+              description: "Amount of data to use for the test"
+              example: "1g"
+            invalidate:
+              type: "number"
+              description: "`--invalidate` param of fio"
+              minimum: 0
+              maximum: 1
+              example: 0
+            overwrite:
+              type: "number"
+              description: "Overwrite anyting or not"
+              minimum: 0
+              maximum: 1
+              example: 0
+            output_format:
+              type: "string"
+              example: "json"
+      responses:
+        "200":
+          description: "Success"
+        "501":
+          description: "Error"
+  /drives/fio/last:
+    get:
+      tags: 
+      - "drives"
+      summary: "Get last fio result"
+      description: "Returns the result of the most recent `fio` run"
+      operationId: "getLastFioResult"
+      responses:
+        "200":
+          description: "Success"
+        "501":
+          description: "Error, no results yet."
+  /drives/results/list:
+    get:
+      tags: 
+      - "drives"
+      summary: "Get history of fio results"
+      description: "Returns root folder list of fio history"
+      operationId: "listFioResults"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: "array"
+            items:
+              type: "string"
+            example: ["2021_10_11", "2021_10_12"]
+  /drives/results/list/{date}:
+    get:
+      tags: 
+      - "drives"
+      summary: "Get list of fio results for the date"
+      description: "Returns list of fio history in the given date folder"
+      operationId: "listFioResultsForDate"
+      parameters:
+      - in: "path"
+        name: "date"
+        type: "string"
+        required: true
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: "array"
+            items:
+              type: "string"
+            example: ["123123123.bin", "124312423.bin"]
+  /drives/results/view/{file}:
+    get:
+      tags: 
+      - "drives"
+      summary: "Get contents of fio history item"
+      description: "Returns the content of given history item of fio runs"
+      operationId: "viewFioResult"
+      parameters:
+      - in: "path"
+        name: "file"
+        type: "string"
+        required: true
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: "Success"
+  
