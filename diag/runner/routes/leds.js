@@ -22,16 +22,16 @@ router.put('/:name/:color', async (req, res, next) => {
     `${name}`,
     `${name}`
   ])
-
-  const ledColor = color.split("-").map(c => parseInt(c) / 100) 
-
+  
   try {
+    const intensity = parseInt(c) / 100
+    const ledColor = [intensity,intensity,intensity]
     await led.setColor(ledColor)
-  } catch (error) {
-    console.log(error)
+  } catch (error) {    
+    res.sendStatus(501)
   }
 
-  res.send();
+  res.sendStatus(200);
 })
 
 router.post('/all/:color', async (req, res, next) => {
