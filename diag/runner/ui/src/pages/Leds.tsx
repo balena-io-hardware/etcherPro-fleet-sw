@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { Box, Button, ButtonGroup, Flex } from 'rendition'
 
 type LedsPageProps = {
+  onDataReceived?: (data:any) => void,
   autoload?: Boolean
 }
 
-export const Leds = ({ autoload }: LedsPageProps) => {
+export const Leds = ({ autoload, onDataReceived }: LedsPageProps) => {
   const [leds, setLeds] = useState([] as Array<string>);
   
   useEffect(() => {
@@ -19,6 +20,9 @@ export const Leds = ({ autoload }: LedsPageProps) => {
       const res = await fetch(`/api/leds`)
       const ledResponse = await res.json()
       setLeds(ledResponse);
+      if (onDataReceived) {
+        onDataReceived(ledResponse)
+      }
     } catch (err) {
       // cant get leds
     }    
