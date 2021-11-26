@@ -37,6 +37,186 @@
         }
       }
     },
+    "/supervisor/url": {
+      "get": {
+        "tags": [
+          "supervisor"
+        ],
+        "summary": "$BALENA_SUPERVISOR_ADDRESS",
+        "description": "The address of the balena supervisor.",
+        "operationId": "supervisorUrl",
+        "produces": [
+          "text/plain"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+              "example": "http://127.0.0.1:48484"
+            }
+          }
+        }
+      }
+    },
+    "/supervisor/apiKey": {
+      "get": {
+        "tags": [
+          "supervisor"
+        ],
+        "summary": "$BALENA_SUPERVISOR_API_KEY",
+        "description": "The api key for the balena supervisor.",
+        "operationId": "supervisorApiKey",
+        "produces": [
+          "text/plain"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+              "example": "f5f8faq2344..uuid"
+            }
+          }
+        }
+      }
+    },
+    "/supervisor/appid": {
+      "get": {
+        "tags": [
+          "supervisor"
+        ],
+        "summary": "$BALENA_APP_ID",
+        "description": "The appId required for subsequent calls to the supervisor.",
+        "operationId": "supervisorAppId",
+        "produces": [
+          "text/plain"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+              "example": "1865872"
+            }
+          }
+        }
+      }
+    },
+    "/supervisor/createlock": {
+      "get": {
+        "tags": [
+          "supervisor"
+        ],
+        "summary": "Start lock",
+        "description": "Creates a lock file what prevents the container from boot.",
+        "operationId": "supervisorCreateStartLock",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/expects": {
+      "get": {
+        "tags": [
+          "expectations"
+        ],
+        "summary": "Get the current expectations",
+        "description": "Returns dictionary of expectations",
+        "operationId": "getExpects",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "method": {
+                      "type": "string",
+                      "description": "The name of the property to be checked. Could be sub property with dot notation.",
+                      "example": "length"
+                    },
+                    "value": {
+                      "type": "string",
+                      "description": "The value to check the property against, string or number",
+                      "example": 4
+                    },
+                    "op": {
+                      "type": "string",
+                      "description": "The relation between ceched and checking value",
+                      "enum": [
+                        "gt",
+                        "eq",
+                        "lt",
+                        "ne"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "expectations"
+        ],
+        "summary": "Set the current expectations",
+        "description": "Sets the current expectations to the request body. The keys of the dictionary should match the object to be checked, like `leds`,`drives`,`network` (instead of additionalProp)",
+        "operationId": "setExpects",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "method": {
+                      "type": "string",
+                      "description": "The name of the property to be checked. Could be sub property with dot notation.",
+                      "example": "length"
+                    },
+                    "value": {
+                      "type": "string",
+                      "description": "The value to check the property against, string or number",
+                      "example": 4
+                    },
+                    "op": {
+                      "type": "string",
+                      "description": "The relation between ceched and checking value",
+                      "enum": [
+                        "gt",
+                        "eq",
+                        "lt",
+                        "ne"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
     "/leds": {
       "get": {
         "tags": [
@@ -204,7 +384,7 @@
           "drives"
         ],
         "summary": "Start fio run",
-        "description": "Run `fio` on the devices provided in the parameters.",
+        "description": "Run `fio` on the devices provided in the parameters. Creates a history item.",
         "operationId": "runFioOnDrives",
         "parameters": [
           {
@@ -377,6 +557,111 @@
         "summary": "Get contents of fio history item",
         "description": "Returns the content of given history item of fio runs",
         "operationId": "viewFioResult",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "file",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "produces": [
+          "text/plain"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/network": {
+      "get": {
+        "tags": [
+          "network"
+        ],
+        "summary": "Get network info",
+        "description": "Returns the list of available networks from `os.networkInterfaces`. The call creates a history item.",
+        "operationId": "getNetworks",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "501": {
+            "description": "Error, no results yet."
+          }
+        }
+      }
+    },
+    "/network/results/list": {
+      "get": {
+        "tags": [
+          "network"
+        ],
+        "summary": "Get history of fio results",
+        "description": "Returns root folder list of network info history",
+        "operationId": "listNetworkResults",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "2021_10_11",
+                "2021_10_12"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/network/results/list/{date}": {
+      "get": {
+        "tags": [
+          "network"
+        ],
+        "summary": "Get list of network results for the date",
+        "description": "Returns list of network info history in the given date folder",
+        "operationId": "listNetworkResultsForDate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "date",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "123123123.bin",
+                "124312423.bin"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/network/results/view/{file}": {
+      "get": {
+        "tags": [
+          "network"
+        ],
+        "summary": "Get contents of network history item",
+        "description": "Returns the content of given history item of network info",
+        "operationId": "viewNetworkResult",
         "parameters": [
           {
             "in": "path",
