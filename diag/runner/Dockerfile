@@ -3,6 +3,7 @@ FROM balenalib/aarch64-debian-node:14-buster-build
 WORKDIR /usr/src/app
 
 COPY . .
+COPY ./public/expects_example.json /usr/src/diag-data/expects.json
 RUN npm install 
 RUN apt-get update
 RUN apt-get -y install fio

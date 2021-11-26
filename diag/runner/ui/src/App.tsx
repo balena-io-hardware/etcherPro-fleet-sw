@@ -36,7 +36,7 @@ function App() {
   const location = useLocation();
 
   useEffect(() => {
-    getExpects();
+    (async () => await getExpects())()
   }, []);
 
   const closeScreenFrame = () => {
@@ -48,8 +48,8 @@ function App() {
   };
 
   const getExpects = async () => {
-    let raw = await fetch(`/expects/expects.json`);
-    const exp = JSON.parse(await raw.text());
+    let raw = await fetch(`/api/expects`);    
+    const exp = JSON.parse(await raw.json());
     setExpects(exp);
 
     return exp;
