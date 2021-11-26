@@ -28,6 +28,7 @@ import {
 
 function App() {
   const [showScreen, setShowScreen] = useState(false);
+  const [diagState, setDiagState] = useState<DiagnosticsState>({})
   const [checkState, setCheckState] = useState(
     "notrun" as "notrun" | "ok" | "failed"
   );
@@ -55,17 +56,18 @@ function App() {
     return exp;
   };
 
+  const onDiagData = (data: any, diagType: string) => {
+    setDiagState({
+      ...diagState,
+      [diagType]: data
+    })
+  }  
+
   const doCheck = async () => {
     setCheckErrors([]);
     const exp = await getExpects();
 
-    // TODO: remove test data
-    let state: DiagnosticsState = {
-      leds: ["led0", "led0", "led0", "led0"],
-      drives: ["led0", "led0", "led0", "led0"],
-    } as DiagnosticsState;
-
-    let { success, errors } = runChecks(state, exp);
+    let { success, errors } = runChecks(diagState, exp);
 
     if (success) {
       setCheckState("ok");
@@ -144,13 +146,13 @@ function App() {
                 },
                 {
                   label: "Leds",
-                  panel: <Leds />,
+                  panel: <Leds onDataReceived={(data) => onDiagData(data, "leds")}/>,
                 },
                 {
                   label: "Write speed",
                   panel: (
                     <>
-                      <Drives />
+                      <Drives onDataReceived={(data) => onDiagData(data, "drives")}/>
                     </>
                   ),
                 },
@@ -158,7 +160,7 @@ function App() {
                   label: "Network",
                   panel: (
                     <>
-                      <NetworkInfo />
+                      <NetworkInfo onDataReceived={(data) => onDiagData(data, "network")} />
                     </>
                   ),
                 },

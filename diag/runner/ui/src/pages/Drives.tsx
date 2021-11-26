@@ -3,10 +3,11 @@ import { Box, Button, HighlightedName, Table, Txt } from 'rendition'
 import { FioResult } from '../iterfaces/FioResult';
 
 type DrivesPageProps = {
+  onDataReceived?: (data: any) => void
   autoload?: boolean
 }
 
-export const Drives = ({ autoload }: DrivesPageProps) => {
+export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
   const [drives, setDrives] = useState([] as Array<string>);
   const [fioCallStatus, setFioCallStatus] = useState<"none" | "ok" | "fail" | "inprogress">("none");
   const [fioResults, setFioResults] = useState<FioResult[]>([]);
@@ -21,6 +22,9 @@ export const Drives = ({ autoload }: DrivesPageProps) => {
     const res = await fetch(`/api/drives`)
     const drivesResponse = await res.json()
     setDrives(drivesResponse);
+    if (onDataReceived) {
+      onDataReceived({ devices: drivesResponse })
+    }
   } 
   
   const callFioRun = async () => {
@@ -47,8 +51,11 @@ export const Drives = ({ autoload }: DrivesPageProps) => {
       if (fioRun.ok) {
         setFioCallStatus("ok")
         let fioRes = await fetch('/api/drives/fio/last')
-
-        setFioResults([...fioResults, await fioRes.json()])
+        const lastRes = await fioRes.json()
+        setFioResults([...fioResults, ])
+        if (onDataReceived) {
+          onDataReceived({ devices: drives, results: lastRes })
+        }
       } else {
         setFioCallStatus("fail")
       }
