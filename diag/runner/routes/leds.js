@@ -14,7 +14,7 @@ router.get('/', (req, res, next) => {
   }
 });
 
-// color format 99-99-99 r-g-b intensity from 1 to 99
+// color intensity from 1 to 99
 router.put('/:name/:color', async (req, res, next) => {
   const { name, color } = req.params;
   let led = new leds.RGBLed([
@@ -24,14 +24,13 @@ router.put('/:name/:color', async (req, res, next) => {
   ])
   
   try {
-    const intensity = parseInt(c) / 100
+    const intensity = parseInt(color) / 100
     const ledColor = [intensity,intensity,intensity]
     await led.setColor(ledColor)
+    res.sendStatus(200);
   } catch (error) {    
     res.sendStatus(501)
   }
-
-  res.sendStatus(200);
 })
 
 router.post('/all/:color', async (req, res, next) => {
