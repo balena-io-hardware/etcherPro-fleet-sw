@@ -28,8 +28,8 @@ export const Leds = ({ autoload, onDataReceived }: LedsPageProps) => {
     }    
   }
 
-  const callLed = async (l: string, dashedIntensityOfColors: string) => {
-    await fetch(`/api/leds/${l}/${dashedIntensityOfColors}`, { method: 'PUT'})
+  const callLed = async (l: string, intensityOfColor: string) => {
+    await fetch(`/api/leds/${l}/${intensityOfColor}`, { method: 'PUT'})
   }
   
   const callAllLed = async (dashedIntensityOfColors: string) => {
@@ -67,8 +67,8 @@ export const Leds = ({ autoload, onDataReceived }: LedsPageProps) => {
         {leds && leds.length ? 
           leds.map(led => <Box>
             <ButtonGroup>
-              <Button success onClick={() => callLed(led, '00-0-99')}>{led} on</Button>
-              <Button outline onClick={() => callLed(led, '0-00-0')}>off</Button>
+              <Button success onClick={() => callLed(led, '99')}>{led} on</Button>
+              <Button outline onClick={() => callLed(led, '0')}>off</Button>
             </ButtonGroup>
           </Box>) : <></>}
       </Flex>
