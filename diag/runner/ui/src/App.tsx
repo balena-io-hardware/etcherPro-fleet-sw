@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Accordion, Box, Button, Link, Navbar } from "rendition";
-import {
-  faTimes,
-  faCheckCircle,
-  faQuestionCircle,
-  faTimesCircle,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Switch,
@@ -21,18 +16,14 @@ import { Leds } from "./pages/Leds";
 import { Drives } from "./pages/Drives";
 import { NetworkInfo } from "./pages/NetworkInfo";
 import {
-  runChecks,
   DiagnosticsState,
-  ExpectationsDict,
+  ExpectationsDict
 } from "./services/ExpectCheck";
+import { ExpectsList, ExpectsCheck } from './components/Expectations'
 
 function App() {
   const [showScreen, setShowScreen] = useState(false);
   const [diagState, setDiagState] = useState<DiagnosticsState>({})
-  const [checkState, setCheckState] = useState(
-    "notrun" as "notrun" | "ok" | "failed"
-  );
-  const [checkErrors, setCheckErrors] = useState([] as Array<string>);
   const [expects, setExpects] = useState<ExpectationsDict>({});
   const location = useLocation();
 
@@ -62,24 +53,6 @@ function App() {
       [diagType]: data
     })
   }  
-
-  const doCheck = async () => {
-    setCheckErrors([]);
-    const exp = await getExpects();
-
-    let { success, errors } = runChecks(diagState, exp);
-
-    if (success) {
-      setCheckState("ok");
-    } else {
-      setCheckState("failed");
-      setCheckErrors(errors);
-    }
-  };
-
-  const burnSerial = () => {
-    console.log("burrn");
-  };
 
   return (
     <div className="App">
@@ -113,22 +86,7 @@ function App() {
           <ScreenTest />
         </Route>
         <Route path="/manual/expectations">
-          <ul>
-            {Object.keys(expects).map((k) => (
-              <>
-                <li>
-                  {k}:{" "}
-                  <ol>
-                    {expects[k].map((e) => (
-                      <li>
-                        [{e.method}] is '{e.op}' <b>{e.value}</b>
-                      </li>
-                    ))}
-                  </ol>
-                </li>
-              </>
-            ))}
-          </ul>
+          <ExpectsList expects={expects} />
         </Route>
         <Route path="/manual">
           <Accordion
@@ -167,68 +125,7 @@ function App() {
                 {
                   label: "Mark test complete",
                   panel: (
-                    <Box>
-                      <Button onClick={() => doCheck()}>
-                        Check expectations
-                      </Button>
-                      &nbsp;
-                      {checkState === "ok" ? (
-                        <Button
-                          success
-                          confirmation={{
-                            placement: "top",
-                            text: "Are you sure?",
-                          }}
-                          onClick={() => burnSerial()}
-                          icon={
-                            <FontAwesomeIcon
-                              color="green"
-                              icon={faCheckCircle}
-                            />
-                          }
-                        >
-                          Burn serial
-                        </Button>
-                      ) : (
-                        <></>
-                      )}
-                      {checkState === "failed" ? (
-                        <Button
-                          danger
-                          icon={
-                            <FontAwesomeIcon color="red" icon={faTimesCircle} />
-                          }
-                        >
-                          Burn serial
-                        </Button>
-                      ) : (
-                        <></>
-                      )}
-                      {checkState === "notrun" ? (
-                        <Button
-                          disabled
-                          icon={
-                            <FontAwesomeIcon
-                              color="gray"
-                              icon={faQuestionCircle}
-                            />
-                          }
-                        >
-                          Burn serial
-                        </Button>
-                      ) : (
-                        <></>
-                      )}
-                      {checkErrors.length ? (
-                        <ol>
-                          {checkErrors.map((e) => (
-                            <li>{e}</li>
-                          ))}
-                        </ol>
-                      ) : (
-                        <></>
-                      )}
-                    </Box>
+                    <ExpectsCheck diagState={diagState} expectations={expects} />
                   ),
                 },
               ] as any

@@ -15,8 +15,7 @@ const Operators = {
 }
 
 const getMethod = (propString: string, obj: any) => {
-    if (!propString)
-    return obj;
+    if (!propString || !obj) return obj;
 
     var prop, props = propString.split('.');
 
