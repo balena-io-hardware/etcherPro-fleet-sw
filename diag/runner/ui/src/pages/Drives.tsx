@@ -52,7 +52,7 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
         setFioCallStatus("ok")
         let fioRes = await fetch('/api/drives/fio/last')
         const lastRes = await fioRes.json()
-        setFioResults([...fioResults, ])
+        setFioResults([...fioResults, lastRes])
         if (onDataReceived) {
           onDataReceived({ devices: drives, results: lastRes })
         }

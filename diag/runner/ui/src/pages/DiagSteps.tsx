@@ -6,11 +6,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Leds } from './Leds';
 import { Drives } from './Drives';
 import { NetworkInfo } from './NetworkInfo';
+import { DiagnosticsState } from '../services/ExpectCheck';
+import { ExpectsCheck } from '../components/Expectations'
 
 export const DiagSteps = () => {
     const [currentStep, setCurrentStep] = useState<number>(0);
     const [showScreen, setShowScreen] = useState(true);
-
+    const [diagState, setDiagState] = useState<DiagnosticsState>({})
+    
     const { path } = useRouteMatch()
     let history = useHistory()
     let location = useLocation()
@@ -28,6 +31,13 @@ export const DiagSteps = () => {
     const openScreenFrame = () => {
       setShowScreen(true);  
     }
+
+    const onDiagData = (data: any, diagType: string) => {
+      setDiagState({
+        ...diagState,
+        [diagType]: data
+      })
+    } 
 
     return (
       <>
@@ -57,7 +67,7 @@ export const DiagSteps = () => {
           <Route path={`${path}/(leds|start)`}>
             <Button primary onClick={() => nextStep('screen')}>Next</Button>
             <br />
-            <Leds autoload/>
+            <Leds autoload onDataReceived={(data) => onDiagData(data, 'leds')}/>
           </Route>
           <Route path={`${path}/screen`}>
             <Button primary onClick={() => nextStep('drives')}>Insert all the drives and Next</Button>
@@ -92,15 +102,15 @@ export const DiagSteps = () => {
           <Route path={`${path}/drives`}>
             <Button primary onClick={() => nextStep('network')}>Next</Button>
             <br />
-            <Drives autoload/>
+            <Drives autoload onDataReceived={(data) => onDiagData(data, 'drives')}/>
           </Route>
           <Route path={`${path}/network`}>
             <Button primary onClick={() => nextStep('serial')}>Next</Button>
             <br />
-            <NetworkInfo/>
+            <NetworkInfo onDataReceived={(data) => onDiagData(data, 'network')}/>
           </Route>
           <Route path={`${path}/serial`}>
-            serial TBD
+            <ExpectsCheck diagState={diagState} autorun={true}/>
           </Route>
         </Switch>
       </>
