@@ -27,6 +27,7 @@ router.put('/:name/:color', async (req, res, next) => {
     const intensity = parseInt(color) / 100
     const ledColor = [intensity,intensity,intensity]
     await led.setColor(ledColor)
+    await led.close()
     res.sendStatus(200);
   } catch (error) {    
     res.sendStatus(501)
@@ -48,6 +49,7 @@ router.post('/all/:color', async (req, res, next) => {
   try {
     for (let ledC of ledStrip) {
       await ledC.setColor(ledColor)
+      await ledC.close()
     }
   } catch (error) {
     console.log(error)
