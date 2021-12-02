@@ -18,7 +18,14 @@ export const Leds = ({ autoload, onDataReceived }: LedsPageProps) => {
   const getLeds = async () => {
     try {
       const res = await fetch(`/api/leds`)
-      const ledResponse = await res.json()
+      const ledResponse = (await res.json())
+        .filter((l: string) => l.startsWith("led"))
+        .sort((a: string, b: string) => {
+          if (a < b) return -1;
+          if (b < a) return 1;
+          return 0;
+        })
+
       setLeds(ledResponse);
       if (onDataReceived) {
         onDataReceived(ledResponse)
