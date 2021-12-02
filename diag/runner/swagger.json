@@ -139,12 +139,12 @@
                 "items": {
                   "type": "object",
                   "properties": {
-                    "method": {
+                    "property": {
                       "type": "string",
                       "description": "The name of the property to be checked. Could be sub property with dot notation.",
                       "example": "length"
                     },
-                    "value": {
+                    "expected": {
                       "type": "string",
                       "description": "The value to check the property against, string or number",
                       "example": 4
@@ -158,6 +158,26 @@
                         "lt",
                         "ne"
                       ]
+                    },
+                    "func": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "description": "Name or description of the function",
+                          "example": "keys.length"
+                        },
+                        "args": {
+                          "type": "string",
+                          "description": "Argument list to be passed to `new Function()`",
+                          "example": "a"
+                        },
+                        "body": {
+                          "type": "string",
+                          "description": "The body of the function to be run",
+                          "example": "return Object.keys(a).length"
+                        }
+                      }
                     }
                   }
                 }
@@ -184,12 +204,12 @@
                 "items": {
                   "type": "object",
                   "properties": {
-                    "method": {
+                    "property": {
                       "type": "string",
                       "description": "The name of the property to be checked. Could be sub property with dot notation.",
                       "example": "length"
                     },
-                    "value": {
+                    "expected": {
                       "type": "string",
                       "description": "The value to check the property against, string or number",
                       "example": 4
@@ -203,6 +223,26 @@
                         "lt",
                         "ne"
                       ]
+                    },
+                    "func": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "description": "Name or description of the function",
+                          "example": "keys.length"
+                        },
+                        "args": {
+                          "type": "string",
+                          "description": "Argument list to be passed to `new Function()`",
+                          "example": "a"
+                        },
+                        "body": {
+                          "type": "string",
+                          "description": "The body of the function to be run",
+                          "example": "return Object.keys(a).length"
+                        }
+                      }
                     }
                   }
                 }

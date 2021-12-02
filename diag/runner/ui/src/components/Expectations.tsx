@@ -144,7 +144,7 @@ export const ExpectsList = ({expects}: ExpectsListProps) => {
                         <ol>
                             {expects[k].map((e) => (
                                 <li>
-                                [{e.method}] is '{e.op}' <b>{e.value}</b>
+                                [{e.property || (e.func?.name && `${e.func.name}(${e.property || k})`)}] is '{e.op}' <b>{e.expected}</b>
                                 </li>
                             ))}
                         </ol>

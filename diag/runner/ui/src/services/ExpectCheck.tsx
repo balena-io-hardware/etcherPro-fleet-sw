@@ -1,7 +1,8 @@
 type Expectation = {
-    method: string, 
+    property: string, 
     op: keyof typeof Operators, 
-    value: string | number
+    expected: string | number,
+    func?: { args: string, body: string, name: string }
 }
 
 export type ExpectationsDict = { [index: string]: Expectation[] }
@@ -14,10 +15,18 @@ const Operators = {
     lt : (a: any, b: any) => a < b
 }
 
-const getMethod = (propString: string, obj: any) => {
-    if (!propString || !obj) return obj;
+const getMethod = (e: Expectation, obj: any) => {
+    if (!obj) return obj;
+    if (!e.property) { 
+        if (!e.func) return obj;
 
-    var prop, props = propString.split('.');
+        // run func on obj in absence of property
+        // eslint-disable-next-line no-new-func
+        let fun = new Function(e.func.args, e.func.body)
+        return fun(obj)
+    } 
+
+    var prop, props = e.property.split('.');
 
     for (var i = 0, iLen = props.length - 1; i < iLen; i++) {
       prop = props[i];
@@ -29,6 +38,16 @@ const getMethod = (propString: string, obj: any) => {
         break;
       }
     }
+
+    if (e.func) {
+        // run through the function
+        // eslint-disable-next-line no-new-func
+        let fun = new Function(e.func.args, e.func.body)
+        let res = fun(obj[props[i]])
+        return res;
+    }
+
+    
     return obj[props[i]];
 }
 
@@ -40,9 +59,10 @@ export const runChecks = (
     let hasFail = Object.keys(expects)
         .map(k => 
             expects[k]
-                .map(m => {        
-                        if (!Operators[m.op](getMethod(m.method, state[k]), m.value)) {                            
-                            errors.push(`${k}: [${m.method}] expected to be '${m.op}' "${m.value}" but was "${getMethod(m.method, state[k])}"`)
+                .map(m => {  
+                        let val = getMethod(m, state[k]) 
+                        if (!Operators[m.op](val, m.expected)) {                            
+                            errors.push(`${k}: [${m.property || (m.func?.name && `${m.func.name}(${m.property || k})`)}] expected to be '${m.op}' "${m.expected}" but was "${val}"`)
                             return false;
                         }
                         return true;
