@@ -1,7 +1,7 @@
 {
   "name": "etcherproapplication",
   "version": "1.0.0",
-  "private": "true",
+  "private": true,
   "description": "balenaEtcher on EtcherPro hardware",
   "main": "update-config-and-start.js",
   "scripts": {
