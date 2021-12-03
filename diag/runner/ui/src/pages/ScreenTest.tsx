@@ -6,6 +6,9 @@ export const ScreenTest = ({ tiles }: any ) => {
     const location = useLocation()
     let rowsCount = 3;
 
+    const bgColors = ["transparent", "red", "green", "blue", "white", "black"];
+    let bgIndex = 0;
+
     if (tiles) {      
       rowsCount = tiles;
     } else if (location.search.indexOf('rows') > -1) {
@@ -14,11 +17,8 @@ export const ScreenTest = ({ tiles }: any ) => {
     }
 
     const toggleBg = (e: EventTarget) => {
-      if ((e as HTMLDivElement).style.backgroundColor === 'green' ) {
-        (e as HTMLDivElement).style.backgroundColor = 'transparent'
-      } else {
-        (e as HTMLDivElement).style.backgroundColor = 'green'
-      }
+      ++bgIndex;
+      (e as HTMLDivElement).style.backgroundColor = bgColors[bgIndex % 6]
     }
 
     let cols: ReactElement[] = [];  
