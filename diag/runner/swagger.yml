@@ -80,6 +80,18 @@ paths:
       responses:
         '200':
           description: successful operation
+  /supervisor/etcher-config:
+    get:
+      tags:
+        - supervisor
+      summary: config.json
+      description: Returns the `config.json` what etcher uses.
+      operationId: supervisorGetEtcherConfig
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
   /expects:
     get:
       tags:
@@ -284,7 +296,7 @@ paths:
       tags:
         - drives
       summary: List all drives
-      description: Returns all drives from `/dev/sd(.){1}`
+      description: Returns all drives from `/dev/sd(.){1}` or `/dev/disks/by-path`
       operationId: getDrives
       responses:
         '200':
@@ -292,11 +304,14 @@ paths:
           schema:
             type: array
             items:
-              type: string
-            example:
-              - /dev/sda
-              - /dev/sdb
-              - ...
+              type: object
+              properties:
+                path:
+                  type: string
+                  example: "/dev/disks/by-path/xxxxxx"
+                device:
+                  type: string
+                  example: "sda"
         '501':
           description: Error opening the directory
   /drives/fio:
