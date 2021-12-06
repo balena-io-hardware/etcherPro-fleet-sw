@@ -25,7 +25,7 @@ router.get('/createlock', function(req, res, next) {
 
 router.get('/etcher-config', function(req, res, next) {  
   try {
-    let config = fs.readFileSync(" /root/.config/balena-etcher/config.json")
+    let config = fs.readFileSync("/root/.config/balena-etcher/config.json")
     res.json(JSON.parse(config))
   } catch (error) {
     res.status(501).send(error)

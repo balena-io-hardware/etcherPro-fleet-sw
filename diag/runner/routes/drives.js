@@ -14,7 +14,7 @@ router.get('/', async (req, res, next) => {
   try {
     const drives = fs.readdirSync("/dev/disk/by-path")
       .filter(f => f.indexOf('usb') > -1 && f.indexOf("scsi") > -1)
-      .map(m => { return { path: `/dev/disk/by-path/${m}`, device: fs.readlinkSync(`/dev/disk/by-path/${m}`)} })
+      .map(m => { return { path: `/dev/disk/by-path/${m}`, device: fs.readlinkSync(`/dev/disk/by-path/${m}`).split("/")[2]} })
       
     res.json(drives);
   } catch {
