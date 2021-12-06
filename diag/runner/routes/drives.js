@@ -9,12 +9,12 @@ var execFileAsync = promisify(process.execFile);
 var DiagHistory = require('../services/DiagResult').DiagHistory
 
 
-/* GET sd[a-z] drives */
+/* GET /dev/sd[a-z] drives and /dev/disk/by-path */
 router.get('/', async (req, res, next) => {
   try {
-    const drives = fs.readdirSync("/dev")
-      .filter(f => f.startsWith('sd') && f.length === 3)
-      .map(m => `/dev/${m}`)
+    const drives = fs.readdirSync("/dev/disk/by-path")
+      .filter(f => f.indexOf('usb') > -1 && f.indexOf("scsi") > -1)
+      .map(m => { return { path: `/dev/disk/by-path/${m}`, device: fs.readlinkSync(`/dev/disk/by-path/${m}`)} })
       
     res.json(drives);
   } catch {

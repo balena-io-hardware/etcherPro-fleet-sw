@@ -7,8 +7,13 @@ type DrivesPageProps = {
   autoload?: boolean
 }
 
+type DrivesList = {
+  path: string //--> /dev/disk/by-path/*
+  device: string //--> /dev/sd[.]
+}
+
 export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
-  const [drives, setDrives] = useState([] as Array<string>);
+  const [drives, setDrives] = useState([] as Array<DrivesList>);
   const [fioCallStatus, setFioCallStatus] = useState<"none" | "ok" | "fail" | "inprogress">("none");
   const [fioResults, setFioResults] = useState<FioResult[]>([]);
 
@@ -35,10 +40,11 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
     setFioCallStatus("inprogress");
 
     try {
+      let devices = drives.map(d => d.path)
       const fioRun = await fetch(`/api/drives/fio`, { 
         method: 'POST',
         body: JSON.stringify({ 
-          devices: drives, 
+          devices: devices, 
           bs: "1m", 
           invalidate: 1,
           overwrite: 1
