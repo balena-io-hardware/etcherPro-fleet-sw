@@ -60,7 +60,7 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
 
     setFioCallStatus("inprogress");
     setFioProgress(0);
-    let progressTime = setInterval(() => setFioProgress(fioProgress+5), 2100)
+    let progressTime = setInterval(() => setFioProgress(prevState => prevState+5), 2100)
 
     try {
       let devices = drives.map(d => `/dev/${d.device}`)
@@ -80,9 +80,9 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
         setFioCallStatus("ok")
         let fioRes = await fetch('/api/drives/fio/last')
         const lastRes = await fioRes.json()
-        setFioResults([...fioResults, lastRes])
+        setFioResults(prevState => [...prevState, lastRes])
         if (onDataReceived) {
-          onDataReceived({ devices: drives, results: lastRes })
+          onDataReceived({ devices: drives, results: fioResults })
         }
       } else {
         setFioCallStatus("fail")
@@ -102,7 +102,7 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
       const fioRun = await fetch(`/api/drives/fio`, { 
         method: 'POST',
         body: JSON.stringify({ 
-          devices: `/dev/${deviceItem.path}`, 
+          devices: [`/dev/${deviceItem.device}`], 
           invalidate: 1,
           overwrite: 1
         }),
@@ -112,36 +112,47 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
       })
       
       if (fioRun.ok) {  
-        setFioProgress(fioProgress + (100 / drives.length) ) 
+        setFioProgress(prevState => prevState + (100 / drives.length) ) 
 
         let fioRes = await fetch('/api/drives/fio/last')
         const lastRes = await fioRes.json()
         
-        setFioResults([...fioResults, lastRes])
+        setFioResults(prevState => [...prevState, lastRes])
         
         if (onDataReceived) {
-          onDataReceived({ devices: drives, results: lastRes })
+          onDataReceived({ devices: drives, results: fioResults })
         }
       } 
     }
 
-    // check if all the calls were good
-    if (fioProgress < 99) {
-      setFioCallStatus("fail")
-    } else {
-      setFioCallStatus("ok")
-    }
+    // wait a bit and check if all the calls were good
+    setTimeout(() => {
+      if (fioProgress < 99) {
+        setFioCallStatus("fail")
+      } else {
+        setFioCallStatus("ok")
+      }
+    }, 1000);
   }
 
   const handleResultClick = async (device: string) => {
+    if (!device.length) return;
+
     let driveIndex = drives.findIndex(d => d.device === device)
-    let led_blue = driveLeds[drives[driveIndex].path][2] // led.*_b
-    if (toggleLeds[drives[driveIndex].path]) {
-      setToggleLeds({ ...toggleLeds, [drives[driveIndex].path]: false })
-      await LedService.callOneLed(led_blue, "0")
+
+    if (driveIndex > -1) {
+      let driveName = drives[driveIndex].path.split("/")[4]
+      let led_blue = driveLeds[driveName][2] // led.*_b
+    
+      if (toggleLeds[driveName]) {
+        setToggleLeds(prevState => { return { ...prevState, [driveName]: false } })
+        await LedService.callOneLed(led_blue, "0")
+      } else {
+        setToggleLeds(prevState => { return { ...prevState, [driveName]: true } })
+        await LedService.callOneLed(led_blue, "99")
+      }
     } else {
-      setToggleLeds({ ...toggleLeds, [drives[driveIndex].path]: true })
-      await LedService.callOneLed(led_blue, "99")
+      console.error(`device: ${device} mapping cannot be resolved`)
     }
   }
 
@@ -179,7 +190,7 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
         {
           fioResults.map((r, i) => 
             <>
-              <li onClick={() => handleResultClick(`${r.disk_util && r.disk_util.length === 1 && r.disk_util[0].name}`)}>
+              <li onClick={() => handleResultClick(`${(r.disk_util && r.disk_util.length === 1) ? r.disk_util[0].name : ""}`)}>
                 <Txt>Name: {r.jobs[0].jobname} | Bandwith in kb/s </Txt>
                 <Table
                   columns={[
@@ -207,8 +218,8 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
                     {r.disk_util?.map(d => <>|- {d.name} : {d.util} -|</>)}
                   </Txt>
                 </Box>
-              </li>
               <hr />
+              </li>
             </>
             )
         }
