@@ -165,7 +165,7 @@
                     "expected": {
                       "type": "string",
                       "description": "The value to check the property against, string or number",
-                      "example": 4
+                      "example": "4"
                     },
                     "op": {
                       "type": "string",
@@ -230,7 +230,7 @@
                     "expected": {
                       "type": "string",
                       "description": "The value to check the property against, string or number",
-                      "example": 4
+                      "example": "4"
                     },
                     "op": {
                       "type": "string",
@@ -502,11 +502,31 @@
                 "size": {
                   "type": "string",
                   "description": "Amount of data to use for the test",
-                  "example": "1g"
+                  "example": "500m"
+                },
+                "io_size": {
+                  "type": "string",
+                  "description": "`--io_size parameter of fio`",
+                  "example": "10g"
+                },
+                "ioengine": {
+                  "type": "string",
+                  "description": "`--ioengine parameter of fio`",
+                  "example": "libaio"
+                },
+                "iodepth": {
+                  "type": "number",
+                  "description": "`--iodepth parameter of fio`",
+                  "example": 32
+                },
+                "fsync": {
+                  "type": "number",
+                  "description": "`--fsync parameter of fio`",
+                  "example": 10000
                 },
                 "invalidate": {
                   "type": "number",
-                  "description": "`--invalidate` param of fio",
+                  "description": "`--invalidate` parameter of fio",
                   "minimum": 0,
                   "maximum": 1,
                   "example": 0
