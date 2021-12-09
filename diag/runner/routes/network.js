@@ -16,24 +16,4 @@ router.get('/', function(req, res, next) {
   res.json(networks);
 });
 
-router.get('/results/list', (req, res, next) => {
-  let entries = DiagHistory.listNetworkForDate()
-
-  res.json(entries)
-})
-
-router.get('/results/list/:date', (req, res, next) => {
-  const { date } = req.params
-  let entries = DiagHistory.listNetworkForDate(date)
-
-  res.json(entries)
-})
-
-router.get('/results/view/:fileName', (req, res, next) => {
-  const { fileName } = req.params
-  let content = DiagHistory.readNetworkFile(fileName)
-
-  res.send(content)
-})
-
 module.exports = router;

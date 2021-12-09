@@ -95,24 +95,4 @@ router.get('/fio/last', async (req, res, next) => {
   }
 })
 
-router.get('/results/list', (req, res, next) => {
-  let entries = DiagHistory.listDrivesForDate()
-
-  res.json(entries)
-})
-
-router.get('/results/list/:date', (req, res, next) => {
-  const { date } = req.params
-  let entries = DiagHistory.listDrivesForDate(date)
-
-  res.json(entries)
-})
-
-router.get('/results/view/:fileName', (req, res, next) => {
-  const { fileName } = req.params
-  let content = DiagHistory.readDrivesFile(fileName)
-
-  res.send(content)
-})
-
 module.exports = router;

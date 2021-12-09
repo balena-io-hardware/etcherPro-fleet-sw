@@ -12,6 +12,7 @@ var drivesRouter = require('./routes/drives');
 var supervisorRouter = require('./routes/supervisor');
 var networkRouter = require('./routes/network');
 var expectsRouter = require('./routes/expects');
+var historyRouter = require('./routes/history');
 
 var app = express();
 
@@ -27,6 +28,7 @@ app.use('/api/drives', drivesRouter);
 app.use('/api/supervisor', supervisorRouter);
 app.use('/api/network', networkRouter);
 app.use('/api/expects', expectsRouter);
+app.use('/api/history', historyRouter);
 
 // docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
