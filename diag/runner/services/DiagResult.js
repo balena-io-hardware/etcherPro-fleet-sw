@@ -12,7 +12,11 @@ class DiagResult {
         }
 
         this._name = name
-        this._path = path.join(filepath, 'diag-data', 'history', name)
+        if (name) {
+            this._path = path.join(filepath, 'diag-data', 'history', name)
+        } else {
+            this._path = path.join(filepath, 'diag-data', 'history') // root
+        }
     }
 
     #createDateFolder = (date) => `${date.getFullYear()}_${date.getMonth()}_${date.getDate()}`;
@@ -74,39 +78,30 @@ class DiagResult {
         }
     }
 }
+
 const DiagTypes = {
-    NETWORK: 'network',
-    DRIVES: 'drives',
-    LEDS: 'leds'
+    network: 'network',
+    drives: 'drives',
+    leds: 'leds'
 }
 
 const createDiagResult = (diagType) => new DiagResult(diagType)
-const createNetworkResult =  createDiagResult(DiagTypes.NETWORK)
-const createLedsResult = createDiagResult(DiagTypes.LEDS)
-const createDrivesResult = createDiagResult(DiagTypes.DRIVES)
+const createNetworkResult =  createDiagResult(DiagTypes.network)
+const createLedsResult = createDiagResult(DiagTypes.leds)
+const createDrivesResult = createDiagResult(DiagTypes.drives)
 
-const listNetworkForDate = (date) => createDiagResult(DiagTypes.NETWORK).list(date)
-const listLedsForDate = (date) => createDiagResult(DiagTypes.LEDS).list(date)
-const listDrivesForDate = (date) => createDiagResult(DiagTypes.DRIVES).list(date)
 
-const readNetworkFile = (fileName) => createDiagResult(DiagTypes.NETWORK).read(fileName)
-const readLedsFile = (fileName) => createDiagResult(DiagTypes.LEDS).read(fileName)
-const readDrivesFile = (fileName) => createDiagResult(DiagTypes.DRIVES).read(fileName)
 
 
 const DiagHistory = {
+    createDiagResult,
     createDrivesResult,
     createLedsResult,
     createNetworkResult,
-    listNetworkForDate,
-    listLedsForDate,
-    listDrivesForDate, 
-    readNetworkFile,
-    readLedsFile,
-    readDrivesFile 
 }     
 
 module.exports = { 
     DiagResult,
-    DiagHistory
+    DiagHistory,
+    DiagTypes
 }

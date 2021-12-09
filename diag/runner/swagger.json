@@ -574,90 +574,6 @@
         }
       }
     },
-    "/drives/results/list": {
-      "get": {
-        "tags": [
-          "drives"
-        ],
-        "summary": "Get history of fio results",
-        "description": "Returns root folder list of fio history",
-        "operationId": "listFioResults",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "example": [
-                "2021_10_11",
-                "2021_10_12"
-              ]
-            }
-          }
-        }
-      }
-    },
-    "/drives/results/list/{date}": {
-      "get": {
-        "tags": [
-          "drives"
-        ],
-        "summary": "Get list of fio results for the date",
-        "description": "Returns list of fio history in the given date folder",
-        "operationId": "listFioResultsForDate",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "date",
-            "type": "string",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "example": [
-                "123123123.bin",
-                "124312423.bin"
-              ]
-            }
-          }
-        }
-      }
-    },
-    "/drives/results/view/{file}": {
-      "get": {
-        "tags": [
-          "drives"
-        ],
-        "summary": "Get contents of fio history item",
-        "description": "Returns the content of given history item of fio runs",
-        "operationId": "viewFioResult",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "file",
-            "type": "string",
-            "required": true
-          }
-        ],
-        "produces": [
-          "text/plain"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
     "/network": {
       "get": {
         "tags": [
@@ -679,14 +595,47 @@
         }
       }
     },
-    "/network/results/list": {
+    "/history": {
       "get": {
         "tags": [
-          "network"
+          "history"
         ],
-        "summary": "Get history of fio results",
-        "description": "Returns root folder list of network info history",
-        "operationId": "listNetworkResults",
+        "summary": "Get list of available subfolders in history",
+        "description": "Returns root folder list of history",
+        "operationId": "listHistoryTypes",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": [
+                "drives",
+                "networks"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/history/{diagType}": {
+      "get": {
+        "tags": [
+          "history"
+        ],
+        "summary": "Get list of dates in history for type of diagnostics",
+        "description": "Returns list of dates with history entries available for the type of diagnostics. Call `api/history` for available types.",
+        "operationId": "listHistoriesForType",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "diagType",
+            "type": "string",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -704,18 +653,24 @@
         }
       }
     },
-    "/network/results/list/{date}": {
+    "/history/{diagType}/{date}": {
       "get": {
         "tags": [
-          "network"
+          "history"
         ],
-        "summary": "Get list of network results for the date",
-        "description": "Returns list of network info history in the given date folder",
+        "summary": "Get list of histoty items results for the date",
+        "description": "Returns list of history items in the given date folder in the given type.",
         "operationId": "listNetworkResultsForDate",
         "parameters": [
           {
             "in": "path",
             "name": "date",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "diagType",
             "type": "string",
             "required": true
           }
@@ -737,18 +692,24 @@
         }
       }
     },
-    "/network/results/view/{file}": {
+    "/history/{diagType}/view/{file}": {
       "get": {
         "tags": [
-          "network"
+          "history"
         ],
-        "summary": "Get contents of network history item",
-        "description": "Returns the content of given history item of network info",
-        "operationId": "viewNetworkResult",
+        "summary": "Get contents of history item",
+        "description": "Returns the content of given history item",
+        "operationId": "viewHistoryResult",
         "parameters": [
           {
             "in": "path",
             "name": "file",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "diagType",
             "type": "string",
             "required": true
           }
