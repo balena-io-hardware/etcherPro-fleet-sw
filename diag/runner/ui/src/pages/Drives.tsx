@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Box, Button, HighlightedName, ProgressBar, Table, Txt } from 'rendition'
 import { FioResult } from '../iterfaces/FioResult';
 import { LedService } from '../services/Leds'
@@ -21,13 +21,39 @@ type ToggleLeds = {
   [index: string]: boolean
 }
 
+const useInterval = (callback: Function, delay?: number) => {
+  const savedCallback = useRef<Function>();
+
+  // Remember the latest callback.
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    function tick() {
+      if (savedCallback && savedCallback.current) {
+        savedCallback.current();
+      }
+    }
+    if (delay !== undefined) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}
+
 export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
   const [drives, setDrives] = useState([] as Array<DrivesListItem>);
   const [fioCallStatus, setFioCallStatus] = useState<"none" | "ok" | "fail" | "inprogress">("none");
   const [fioResults, setFioResults] = useState<FioResult[]>([]);
   const [driveLeds, setDriveLeds] = useState<DriveLeds>({});
   const [toggleLeds, setToggleLeds] = useState<ToggleLeds>({});
-  const [fioProgress, setFioProgress] = useState<number>(0)
+  const [fioOneByOneProgress, setFioOneByOneProgress] = useState<number>(0)
+  const [fioAllProgress, setFioAllProgress] = useState<number>(0)
+  const [fioCallOneByOneInProgress, setFioCallOnebyOneInProgress] = useState<boolean>(false)
+  const [fioCallAllInProgress, setFioCallAllInProgress] = useState<boolean>(false)
+  
 
   useEffect(() => {
     if (autoload) {
@@ -38,6 +64,22 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
     }
   }, [autoload])
 
+  useEffect(() => {
+    if (fioCallOneByOneInProgress) {
+      setFioCallStatus("inprogress")
+    } else {
+      if (fioOneByOneProgress < 99) {
+        setFioCallStatus("fail")
+      } else {
+        setFioCallStatus("ok")
+      }
+    }
+  }, [fioCallOneByOneInProgress, fioOneByOneProgress])
+
+  useInterval(() => {
+    setFioAllProgress(prevState => prevState + 5)
+  }, fioCallAllInProgress ? 2100 : undefined)
+
   const getDrives = async () => {
     const res = await fetch(`/api/drives`)
     const drivesResponse = await res.json()
@@ -45,6 +87,8 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
     if (onDataReceived) {
       onDataReceived({ devices: drivesResponse })
     }
+
+    setFioCallStatus("none")
   } 
 
   const getDriveLeds = async () => {
@@ -58,9 +102,9 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
       await getDrives();
     }
 
-    setFioCallStatus("inprogress");
-    setFioProgress(0);
-    let progressTime = setInterval(() => setFioProgress(prevState => prevState+5), 2100)
+    setFioAllProgress(0);
+    setFioCallAllInProgress(true)
+    setFioCallStatus("inprogress")
 
     try {
       let devices = drives.map(d => `/dev/${d.device}`)
@@ -91,12 +135,16 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
       setFioCallStatus("fail")
     }
 
-    clearInterval(progressTime)
+    setFioCallAllInProgress(false)
   }
 
   const callFioOneByOne = async () => {
-    setFioCallStatus("inprogress");
-    setFioProgress(0);
+    if (fioCallStatus !== 'none') {
+      await getDrives();
+    }
+
+    setFioCallOnebyOneInProgress(true)
+    setFioOneByOneProgress(0);
 
     for (let deviceItem of drives) {
       const fioRun = await fetch(`/api/drives/fio`, { 
@@ -112,7 +160,7 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
       })
       
       if (fioRun.ok) {  
-        setFioProgress(prevState => prevState + (100 / drives.length) ) 
+        setFioOneByOneProgress(prevState => prevState + (100 / drives.length) ) 
 
         let fioRes = await fetch('/api/drives/fio/last')
         const lastRes = await fioRes.json()
@@ -125,14 +173,8 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
       } 
     }
 
-    // wait a bit and check if all the calls were good
-    setTimeout(() => {
-      if (fioProgress < 99) {
-        setFioCallStatus("fail")
-      } else {
-        setFioCallStatus("ok")
-      }
-    }, 1000);
+    setFioCallOnebyOneInProgress(false)
+
   }
 
   const handleResultClick = async (device: string) => {
@@ -185,30 +227,35 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
           Run fio 1-by-1
         </Button>
         <Txt italic>Takes about 30 seconds (per call)</Txt>
-        {fioCallStatus === "inprogress" ? <ProgressBar value={fioProgress} /> : <></>}
+        {fioCallAllInProgress ? <ProgressBar value={fioAllProgress} /> : <></>}
+        {fioCallOneByOneInProgress ? <ProgressBar value={fioOneByOneProgress} /> : <></>}
         <ol style={{paddingBottom: '20vh'}}>
         {
           fioResults.map((r, i) => 
             <>
               <li onClick={() => handleResultClick(`${(r.disk_util && r.disk_util.length === 1) ? r.disk_util[0].name : ""}`)}>
-                <Txt>Name: {r.jobs[0].jobname} | Bandwith in kb/s </Txt>
+                <Txt>Name: {r.jobs[0].jobname} | Bandwith in MB/s </Txt>
                 <Table
                   columns={[
                     {
                       field: 'bw_min',
-                      label: 'min'
+                      label: 'min',
+                      render: (value) => value/1000
                     },
                     {
                       field: 'bw_max',
-                      label: 'max'
+                      label: 'max',
+                      render: (value) => value/1000
                     },
                     {
                       field: 'bw_mean',
-                      label: 'mean'
+                      label: 'mean',
+                      render: (value) => value/1000
                     },
                     {
                       field: 'bw_dev',
-                      label: 'dev'
+                      label: 'dev',
+                      render: (value) => value/1000
                     },
                   ]}
                   data={[r.jobs[0].write]}
