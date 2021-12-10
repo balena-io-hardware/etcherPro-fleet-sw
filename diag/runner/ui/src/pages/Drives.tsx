@@ -9,7 +9,7 @@ type DrivesPageProps = {
 }
 
 type DrivesListItem = {
-  path: string //--> /dev/disk/by-path/*
+  path: string //--> from /dev/disk/by-path/* (no path at the beginning)
   device: string //--> sd[.] (no /dev at the beginning)
 }
 
@@ -77,8 +77,8 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
   }, [fioCallOneByOneInProgress, fioOneByOneProgress])
 
   useInterval(() => {
-    setFioAllProgress(prevState => prevState + 5)
-  }, fioCallAllInProgress ? 2100 : undefined)
+    setFioAllProgress(prevState => prevState + 2)
+  }, fioCallAllInProgress ? 800 : undefined)
 
   const getDrives = async () => {
     const res = await fetch(`/api/drives`)
@@ -102,7 +102,7 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
       await getDrives();
     }
 
-    setFioAllProgress(0);
+    setFioAllProgress(2);
     setFioCallAllInProgress(true)
     setFioCallStatus("inprogress")
 
@@ -144,7 +144,7 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
     }
 
     setFioCallOnebyOneInProgress(true)
-    setFioOneByOneProgress(0);
+    setFioOneByOneProgress(2);
 
     for (let deviceItem of drives) {
       const fioRun = await fetch(`/api/drives/fio`, { 
@@ -183,7 +183,7 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
     let driveIndex = drives.findIndex(d => d.device === device)
 
     if (driveIndex > -1) {
-      let driveName = drives[driveIndex].path.split("/")[4]
+      let driveName = drives[driveIndex].path
       let led_blue = driveLeds[driveName][2] // led.*_b
     
       if (toggleLeds[driveName]) {
@@ -214,7 +214,7 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
           disabled={fioCallStatus === "inprogress"}
           onClick={() => callFioRunAll()}
         >
-          Run fio all
+          Run speed test
         </Button>
         &nbsp;
         <Button 
@@ -224,9 +224,9 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
           disabled={fioCallStatus === "inprogress"}
           onClick={() => callFioOneByOne()}
         >
-          Run fio 1-by-1
+          Run test 1-by-1
         </Button>
-        <Txt italic>Takes about 30 seconds (per call)</Txt>
+        <Txt italic>Takes about 10 seconds (per call)</Txt>
         {fioCallAllInProgress ? <ProgressBar value={fioAllProgress} /> : <></>}
         {fioCallOneByOneInProgress ? <ProgressBar value={fioOneByOneProgress} /> : <></>}
         <ol style={{paddingBottom: '20vh'}}>
@@ -253,8 +253,8 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
                       render: (value) => value/1000
                     },
                     {
-                      field: 'bw_dev',
-                      label: 'dev',
+                      field: 'bw',
+                      label: 'Bandwith',
                       render: (value) => value/1000
                     },
                   ]}

@@ -82,7 +82,7 @@ export const DiagSteps = () => {
                 width={23}  
                 style={{ zIndex: 9999 }}              
                 icon={<FontAwesomeIcon icon={faTimes}/>}
-              />/
+              />
               <Button 
                 success
                 onClick={() => { closeScreenFrame(); nextStep('drives') }}
@@ -93,7 +93,7 @@ export const DiagSteps = () => {
               >Close and next</Button>
               <iframe 
                 className="App-frame" 
-                src={location.search.indexOf('rows') > -1 ? `/screen?rows=${query.get('rows')}` : '/screen'} 
+                src={location.search.indexOf('rows') > -1 ? `/screen?rows=${query.get('rows')}` : '/screen?rows=2'} 
                 title='screen' 
                 key="screen-frame"
               ></iframe>
