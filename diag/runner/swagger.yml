@@ -308,7 +308,7 @@ paths:
               properties:
                 path:
                   type: string
-                  example: "/dev/disks/by-path/xxxxxx"
+                  example: "patform-usb-scsi:0.0.0.0"
                 device:
                   type: string
                   example: "sda"
