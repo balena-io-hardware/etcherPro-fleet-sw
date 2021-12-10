@@ -65,6 +65,7 @@ export const Leds = ({ autoload, onDataReceived }: LedsPageProps) => {
         <Button danger onClick={() => callAllLed('99-0-0')}>red</Button>&nbsp;
         <Button success onClick={() => callAllLed('0-99-0')}>green</Button>&nbsp;
         <Button primary onClick={() => callAllLed('0-0-99')}>blue</Button>&nbsp; 
+        <Button light onClick={() => callAllLed('99-99-99')}>white</Button>&nbsp; 
         <Button onClick={() => callAllLed('0-0-0')}>off</Button>&nbsp; 
       </Box>
       

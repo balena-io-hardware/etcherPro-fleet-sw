@@ -14,7 +14,10 @@ router.get('/', async (req, res, next) => {
   try {
     const drives = fs.readdirSync("/dev/disk/by-path")
       .filter(f => f.indexOf('usb') > -1 && f.indexOf("scsi") > -1)
-      .map(m => { return { path: `/dev/disk/by-path/${m}`, device: fs.readlinkSync(`/dev/disk/by-path/${m}`).split("/")[2]} })
+      .map(m => { 
+        return { path: m, device: `$/dev/${fs.readlinkSync(`/dev/disk/by-path/${m}`).split("/")[2]}` } 
+      })
+      .filter(d => d.device.length === 3) // no partitions sda1 sda2 ... 
       
     res.json(drives);
   } catch {
@@ -53,7 +56,7 @@ router.post('/fio', async (req, res, next) => {
     `--direct=${direct || 0}`,
     `--rw=${rw || "write"}`,
     `--bs=${bs || "1024k"}`,
-    `--runtime=${runtime || 30}`,
+    `--runtime=${runtime || 10}`,
     '--time_based',
     `--numjobs=${numjobs || 1}`,
     `--name=${name || `etcher_test_${new Date(Date.now()).toISOString()}`}`,
