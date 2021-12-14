@@ -43,11 +43,6 @@ services:
     build: ./diag/runner
     privileged: true
     network_mode: host
-    tmpfs:
-      - /host
-      - /run
-      - /tmp
-      - /mnt
     volumes:
       - diag_store:/usr/src/diag-data
       - 'etcher_config:/root/.config/balena-etcher'
