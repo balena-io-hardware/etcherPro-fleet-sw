@@ -34,8 +34,8 @@ app.use('/api/history', historyRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // serve the UI
-app.use(express.static(path.resolve(__dirname, './ui/build')));
+app.use(express.static(path.resolve(__dirname, '../ui/build')));
 app.get('*', (_, res) => {
-  res.sendFile(path.resolve(__dirname, './ui/build', 'index.html'));
+  res.sendFile(path.resolve(__dirname, '../ui/build', 'index.html'));
 });
 module.exports = app;
