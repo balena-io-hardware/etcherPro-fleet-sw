@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Route, Switch, useRouteMatch, useHistory, useLocation } from 'react-router-dom';
-import { Button, Steps, Step } from 'rendition'
+import { Button, Steps, Step, Heading, Flex } from 'rendition'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Leds } from './Leds';
@@ -20,6 +20,11 @@ export const DiagSteps = () => {
     const query = new URLSearchParams(location.search);
     
     const nextStep = (toSlug: string) => {
+      setCurrentStep(currentStep + 1);
+      history.push(`${path}/${toSlug}`)
+    }
+
+    const prevStep = (toSlug: string) => {
       setCurrentStep(currentStep + 1);
       history.push(`${path}/${toSlug}`)
     }
@@ -51,7 +56,7 @@ export const DiagSteps = () => {
             Leds
           </Step>
           <Step status={currentStep > 1 ? "completed" : "pending"}>
-            Screen
+            Touchpanel
           </Step>
           <Step status={currentStep > 2 ? "completed" : "pending"}>
             Drives
@@ -64,9 +69,7 @@ export const DiagSteps = () => {
           </Step>
         </Steps>
         <Switch>
-          <Route path={`${path}/(leds|start)`}>
-            
-            <br />
+          <Route path={`${path}/(leds|start)`}>        
             <Leds
               autoload 
               onDataReceived={(data) => onDiagData(data, 'leds')} 
@@ -74,27 +77,21 @@ export const DiagSteps = () => {
             />
           </Route>
           <Route path={`${path}/screen`}>
-            <Button primary onClick={() => nextStep('drives')}>Insert all the drives and Next</Button>
-            <br />
-            <Button primary onClick={() => openScreenFrame()}>Open screen test</Button>
             {showScreen ? <>
-              <Button 
-                primary
-                onClick={() => closeScreenFrame()}
-                className="add-fab"
-                padding='13px'
-                width={23}  
-                style={{ zIndex: 9999 }}              
-                icon={<FontAwesomeIcon icon={faTimes}/>}
-              />
-              <Button 
-                success
-                onClick={() => { closeScreenFrame(); nextStep('drives') }}
-                className="add-fab"
-                padding='13px'               
-                
-                icon={<FontAwesomeIcon icon={faTimes}/>}
-              >Close and next</Button>
+              <Heading.h4 
+                style={{ zIndex: 9999 }} 
+                className='add-fab'
+              >
+                Tap the boxes
+              </Heading.h4>    
+              <Flex 
+                alignItems={'flex-end'} 
+                justifyContent={'center'}
+                style={{position: 'absolute', left: '30%', right: '30%', bottom: '30px', zIndex: 999}}
+              >
+                <Button light onClick={() => prevStep('start') }>Back</Button>&nbsp;
+                <Button primary onClick={() =>  nextStep('drives') }>Next</Button>&nbsp;
+              </Flex>  
               <iframe 
                 className="App-frame" 
                 src={location.search.indexOf('rows') > -1 ? `/screen?rows=${query.get('rows')}` : '/screen?rows=2'} 

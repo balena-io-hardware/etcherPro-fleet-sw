@@ -23,7 +23,7 @@
   color: white;
 }
 
-button.add-fab {
+.add-fab {
   position: fixed !important;
   top: 23px;
   left: 15px;
