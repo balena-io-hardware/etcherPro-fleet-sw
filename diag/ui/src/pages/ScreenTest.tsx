@@ -2,7 +2,11 @@ import { ReactElement } from 'react';
 import { useLocation } from 'react-router-dom';
 import './ScreenTest.css';
 
-export const ScreenTest = ({ tiles }: any ) => {
+type ScreenTestPageProps = {
+  tiles?: number
+}
+
+export const ScreenTest = ({ tiles }: ScreenTestPageProps ) => {
     const location = useLocation()
     let rowsCount = 3;
 
@@ -28,7 +32,6 @@ export const ScreenTest = ({ tiles }: any ) => {
     for (let i=0; i<rowsCount; ++i) {
       cols.push(col(i))
     }
-    
     
     for (let i=0; i<rowsCount; ++i) {
       rows.push(cols)
