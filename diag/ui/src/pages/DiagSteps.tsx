@@ -65,9 +65,13 @@ export const DiagSteps = () => {
         </Steps>
         <Switch>
           <Route path={`${path}/(leds|start)`}>
-            <Button primary onClick={() => nextStep('screen')}>Next</Button>
+            
             <br />
-            <Leds autoload onDataReceived={(data) => onDiagData(data, 'leds')}/>
+            <Leds
+              autoload 
+              onDataReceived={(data) => onDiagData(data, 'leds')} 
+              onNext={() => nextStep('screen')}
+            />
           </Route>
           <Route path={`${path}/screen`}>
             <Button primary onClick={() => nextStep('drives')}>Insert all the drives and Next</Button>
