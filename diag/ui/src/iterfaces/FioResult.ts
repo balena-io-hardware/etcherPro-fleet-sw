@@ -3,7 +3,7 @@ export interface FioResult {
     timestamp: number;
     timestamp_ms: number;
     time: string;
-    GlobalOptions: GlobalOptions;
+    "global options": GlobalOptions;
     jobs: (JobsEntity)[];
     disk_util?: (DiskUtilEntity)[] | null;
   }

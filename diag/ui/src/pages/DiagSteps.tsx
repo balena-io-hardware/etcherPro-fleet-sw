@@ -101,9 +101,12 @@ export const DiagSteps = () => {
             </> : <></>}
           </Route>
           <Route path={`${path}/drives`}>
-            <Button primary onClick={() => nextStep('network')}>Next</Button>
-            <br />
-            <Drives autoload onDataReceived={(data) => onDiagData(data, 'drives')}/>
+            <Drives 
+              autoload 
+              onDataReceived={(data) => onDiagData(data, 'drives')}
+              onBack={() => prevStep('screen')}
+              onNext={() => nextStep('network')}
+            />
           </Route>
           <Route path={`${path}/network`}>
             <Button primary onClick={() => nextStep('serial')}>Next</Button>
