@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
-import { Box, Button, ButtonGroup, Flex } from 'rendition'
+import { Box, Button, Flex, Heading } from 'rendition'
 
 import { LedService } from '../services/Leds'
 
 type LedsPageProps = {
   onDataReceived?: (data:any) => void,
+  onBack?: () => void,
+  onNext?: () => void,
   autoload?: Boolean
 }
 
-export const Leds = ({ autoload, onDataReceived }: LedsPageProps) => {
+export const Leds = ({ autoload, onDataReceived, onBack, onNext }: LedsPageProps) => {
   const [leds, setLeds] = useState([] as Array<string>);
   
   useEffect(() => {
@@ -55,28 +57,41 @@ export const Leds = ({ autoload, onDataReceived }: LedsPageProps) => {
 
   return (
     <>
+      <Box style={{textAlign: 'left', padding: '10px'}}>
+        <Heading.h4>Set LED color</Heading.h4>
+      </Box>
       { autoload ? <></> :
         <Box>
           <Button onClick={() => getLeds()}>Get available leds</Button>
         </Box>
       }
-      <Box>
-        Set all:
-        <Button danger onClick={() => callAllLed('99-0-0')}>red</Button>&nbsp;
-        <Button success onClick={() => callAllLed('0-99-0')}>green</Button>&nbsp;
-        <Button primary onClick={() => callAllLed('0-0-99')}>blue</Button>&nbsp; 
-        <Button light onClick={() => callAllLed('99-99-99')}>white</Button>&nbsp; 
-        <Button onClick={() => callAllLed('0-0-0')}>off</Button>&nbsp; 
-      </Box>
-      
-      <Flex flexDirection='row' flexWrap="wrap" style={{padding: '5px', overflowY: 'auto', overflowX: 'hidden'}}>
-        {leds && leds.length ? 
-          leds.map(led => <Box>
-            <ButtonGroup>
-              <Button success onClick={() => callLed(led, '99')}>{led} on</Button>
-              <Button outline onClick={() => callLed(led, '0')}>off</Button>
-            </ButtonGroup>
-          </Box>) : <></>}
+      <Flex 
+        style={{wordSpacing: '1.5em'}}
+        alignItems={'center'} 
+        height={'80%'} 
+        justifyContent={'center'}
+      >
+        <Button danger width={'100px'}  onClick={() => callAllLed('99-0-0')}>Red</Button>&nbsp;
+        <Button success width={'100px'} onClick={() => callAllLed('0-99-0')}>Green</Button>&nbsp;
+        <Button primary width={'100px'} onClick={() => callAllLed('0-0-99')}>Blue</Button>&nbsp; 
+      </Flex>
+      <Flex 
+        style={{wordSpacing: '1.5em'}}
+        alignItems={'center'} 
+        justifyContent={'center'}
+      >
+        <Button outline width={'100px'} onClick={() => callAllLed('99-99-99')}>White</Button>&nbsp; 
+        <Button tertiary width={'100px'} onClick={() => callAllLed('0-0-0')}>OFF</Button>&nbsp; 
+      </Flex>
+
+      <Flex 
+        alignItems={'flex-end'} 
+        height={'100%'} 
+        justifyContent={'center'}
+        style={{paddingBottom: '30px'}}
+      >
+        <Button light onClick={() => onBack ? onBack() : null }>Back</Button>&nbsp;
+        <Button primary onClick={() => onNext ? onNext() : null }>Next</Button>&nbsp;
       </Flex>
      
     </>
