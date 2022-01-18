@@ -1,11 +1,20 @@
+import { type } from 'os';
 import { useEffect, useState, useRef } from 'react';
-import { Box, Button, HighlightedName, ProgressBar, Table, Txt } from 'rendition'
-import { FioResult } from '../iterfaces/FioResult';
+import { Box, Button, HighlightedName, ProgressBar, Table, Txt, Flex, Heading } from 'rendition'
+import { ProgressButton } from '../components/progress-button/progress-button';
+import { FioResult, ReadOrWriteOrTrim } from '../iterfaces/FioResult';
 import { LedService } from '../services/Leds'
 
 type DrivesPageProps = {
   onDataReceived?: (data: any) => void
+  onBack?: () => void,
+  onNext?: () => void,
   autoload?: boolean
+}
+
+type FioResultDict = {
+  name: string,
+  data: ReadOrWriteOrTrim
 }
 
 type DrivesListItem = {
@@ -43,10 +52,10 @@ const useInterval = (callback: Function, delay?: number) => {
   }, [delay]);
 }
 
-export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
+export const Drives = ({ autoload, onDataReceived, onBack, onNext }: DrivesPageProps) => {
   const [drives, setDrives] = useState([] as Array<DrivesListItem>);
   const [fioCallStatus, setFioCallStatus] = useState<"none" | "ok" | "fail" | "inprogress">("none");
-  const [fioResults, setFioResults] = useState<FioResult[]>([]);
+  const [fioResults, setFioResults] = useState<FioResultDict[]>([]);
   const [driveLeds, setDriveLeds] = useState<DriveLeds>({});
   const [toggleLeds, setToggleLeds] = useState<ToggleLeds>({});
   const [fioOneByOneProgress, setFioOneByOneProgress] = useState<number>(0)
@@ -138,6 +147,13 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
     setFioCallAllInProgress(false)
   }
 
+  const parseFioResultToDict = (input: FioResult) => {
+   return { 
+     name: input["global options"].filename,
+     data: input.jobs[0].write
+    }
+  }
+
   const callFioOneByOne = async () => {
     if (fioCallStatus !== 'none') {
       await getDrives();
@@ -159,11 +175,12 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
         },
       })
       
+      //if (true) {  
       if (fioRun.ok) {  
         setFioOneByOneProgress(prevState => prevState + (100 / drives.length) ) 
 
         let fioRes = await fetch('/api/drives/fio/last')
-        const lastRes = await fioRes.json()
+        const lastRes = parseFioResultToDict(await fioRes.json())  
         
         setFioResults(prevState => [...prevState, lastRes])
         
@@ -199,79 +216,92 @@ export const Drives = ({ autoload, onDataReceived }: DrivesPageProps) => {
   }
 
   return (
-    <Box style={{overflowY: 'auto'}}>
-      <Box>
-        <Button onClick={() => getDrives()}>Get available drives</Button>
+    <>
+      <Box style={{textAlign: 'left', padding: '10px 0 0 10px '}}>
+        <Heading.h4>Write data to drives</Heading.h4>
       </Box>
-      <br />
-      <Box>
-        <HighlightedName>{drives.length +' drives'}</HighlightedName>    
-        &nbsp;
-        <Button 
-          primary={fioCallStatus === "none"} 
-          danger={fioCallStatus === "fail"} 
-          success={fioCallStatus === "ok"} 
-          disabled={fioCallStatus === "inprogress"}
-          onClick={() => callFioRunAll()}
+      <Box style={{overflowY: 'auto'}}>
+        <Flex 
+          alignItems={'center'}
+          justifyContent={'center'}
+        >      
+          <Box width={'210px'}>
+
+            <ProgressButton  
+              type='flashing'
+              active={fioCallAllInProgress}
+              percentage={fioAllProgress}
+              position={0}
+              disabled={false}
+              cancel={()=> setFioCallAllInProgress(false)}
+              warning={false}
+              callback={() => callFioRunAll()}
+              text='Write simultaneously'
+            />
+          </Box>  
+          <Box>
+            &nbsp;
+            <HighlightedName>{drives.length +' drives'}</HighlightedName>
+            &nbsp;
+          </Box>
+          <Box width={'210px'}>
+            <ProgressButton  
+              type='flashing'
+              active={fioCallOneByOneInProgress}
+              percentage={fioOneByOneProgress}
+              position={0}
+              disabled={false}
+              cancel={()=> setFioCallOnebyOneInProgress(false)}
+              warning={false}
+              callback={() => callFioOneByOne()}
+              text='Write independently'
+            /> 
+          </Box>          
+        </Flex>  
+        <Table
+          onRowClick={(row) => handleResultClick(row.name)}
+          columns={[
+            {
+              field: 'name',
+              label: 'Drive number',
+              render: (value) => <Txt bold>{ fioResults.findIndex((v) => v.name == value)+1 }</Txt>
+            },
+            {                        
+              field: 'data',
+              key: 'avg',
+              label: 'Average',
+              render: (value) => <Txt bold>{`${(value.bw_mean/1000).toFixed(2)} MB/s`}</Txt>
+            },
+            {
+              field: 'data',
+              key: 'max',
+              label: 'Max',
+              render: (value) => `${(value.bw_max/1000).toFixed(2)} MB/s`
+            },
+            {
+              field: 'data',
+              key: 'min',
+              label: 'Min', 
+              render: (value) => `${(value.bw_min/1000).toFixed(2)} MB/s`
+            },
+            {
+              field: 'data',
+              key: 'bw',
+              label: 'Bandwith',
+              render: (value) => `${(value.bw/1000).toFixed(2)} MB/s`
+            },
+          ]}
+          data={fioResults}
+        />
+      </Box>
+      <Flex 
+          alignItems={'flex-end'} 
+          justifyContent={'center'}
+          style={{padding: '15px 0 15px 0' }}
         >
-          Run speed test
-        </Button>
-        &nbsp;
-        <Button 
-          primary={fioCallStatus === "none"} 
-          danger={fioCallStatus === "fail"} 
-          success={fioCallStatus === "ok"} 
-          disabled={fioCallStatus === "inprogress"}
-          onClick={() => callFioOneByOne()}
-        >
-          Run test 1-by-1
-        </Button>
-        <Txt italic>Takes about 10 seconds (per call)</Txt>
-        {fioCallAllInProgress ? <ProgressBar value={fioAllProgress} /> : <></>}
-        {fioCallOneByOneInProgress ? <ProgressBar value={fioOneByOneProgress} /> : <></>}
-        <ol style={{paddingBottom: '20vh'}}>
-        {
-          fioResults.map((r, i) => 
-            <>
-              <li onClick={() => handleResultClick(`${(r.disk_util && r.disk_util.length === 1) ? r.disk_util[0].name : ""}`)}>
-                <Txt>Name: {r.jobs[0].jobname} | Bandwith in MB/s </Txt>
-                <Table
-                  columns={[
-                    {
-                      field: 'bw_min',
-                      label: 'min',
-                      render: (value) => value/1000
-                    },
-                    {
-                      field: 'bw_max',
-                      label: 'max',
-                      render: (value) => value/1000
-                    },
-                    {
-                      field: 'bw_mean',
-                      label: 'mean',
-                      render: (value) => value/1000
-                    },
-                    {
-                      field: 'bw',
-                      label: 'Bandwith',
-                      render: (value) => value/1000
-                    },
-                  ]}
-                  data={[r.jobs[0].write]}
-                />
-                <Box>
-                  <Txt>
-                    {r.disk_util?.map(d => <>|- {d.name} : {d.util} -|</>)}
-                  </Txt>
-                </Box>
-              <hr />
-              </li>
-            </>
-            )
-        }
-        </ol>
-      </Box>      
-    </Box>
+          <Button light onClick={() => onBack ? onBack() : null }>Back</Button>&nbsp;
+          <Button primary onClick={() => onNext ? onNext() : null }>Next</Button>&nbsp;
+        </Flex>
+    </>
   );
 };
