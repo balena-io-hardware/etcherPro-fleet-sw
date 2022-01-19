@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { Route, Switch, useRouteMatch, useHistory, useLocation } from 'react-router-dom';
 import { Button, Steps, Step, Heading, Flex } from 'rendition'
-import { faTimes } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Leds } from './Leds';
 import { Drives } from './Drives';
 import { NetworkInfo } from './NetworkInfo';
@@ -11,7 +9,6 @@ import { ExpectsCheck } from '../components/Expectations'
 
 export const DiagSteps = () => {
     const [currentStep, setCurrentStep] = useState<number>(0);
-    const [showScreen, setShowScreen] = useState(true);
     const [diagState, setDiagState] = useState<DiagnosticsState>({})
     
     const { path } = useRouteMatch()
@@ -25,16 +22,8 @@ export const DiagSteps = () => {
     }
 
     const prevStep = (toSlug: string) => {
-      setCurrentStep(currentStep + 1);
+      setCurrentStep(currentStep - 1);
       history.push(`${path}/${toSlug}`)
-    }
-
-    const closeScreenFrame = () => {
-      setShowScreen(false);  
-    }
-  
-    const openScreenFrame = () => {
-      setShowScreen(true);  
     }
 
     const onDiagData = (data: any, diagType: string) => {
@@ -77,28 +66,26 @@ export const DiagSteps = () => {
             />
           </Route>
           <Route path={`${path}/screen`}>
-            {showScreen ? <>
-              <Heading.h4 
-                style={{ zIndex: 9999 }} 
-                className='add-fab'
-              >
-                Tap the boxes
-              </Heading.h4>    
-              <Flex 
-                alignItems={'flex-end'} 
-                justifyContent={'center'}
-                style={{position: 'absolute', left: '30%', right: '30%', bottom: '30px', zIndex: 999}}
-              >
-                <Button light onClick={() => prevStep('start') }>Back</Button>&nbsp;
-                <Button primary onClick={() =>  nextStep('drives') }>Next</Button>&nbsp;
-              </Flex>  
-              <iframe 
-                className="App-frame" 
-                src={location.search.indexOf('rows') > -1 ? `/screen?rows=${query.get('rows')}` : '/screen?rows=2'} 
-                title='screen' 
-                key="screen-frame"
-              ></iframe>
-            </> : <></>}
+            <Heading.h4 
+              style={{ zIndex: 9999 }} 
+              className='add-fab'
+            >
+              Tap the boxes
+            </Heading.h4>    
+            <Flex 
+              alignItems={'flex-end'} 
+              justifyContent={'center'}
+              style={{position: 'absolute', left: '30%', right: '30%', bottom: '30px', zIndex: 999}}
+            >
+              <Button light onClick={() => prevStep('start') }>Back</Button>&nbsp;
+              <Button primary onClick={() =>  nextStep('drives') }>Next</Button>&nbsp;
+            </Flex>  
+            <iframe 
+              className="App-frame" 
+              src={location.search.indexOf('rows') > -1 ? `/screen?rows=${query.get('rows')}` : '/screen?rows=2'} 
+              title='screen' 
+              key="screen-frame"
+            ></iframe>
           </Route>
           <Route path={`${path}/drives`}>
             <Drives 
