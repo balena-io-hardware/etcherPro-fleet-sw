@@ -5,9 +5,13 @@ import { Leds } from './Leds';
 import { Drives } from './Drives';
 import { NetworkInfo } from './NetworkInfo';
 import { DiagnosticsState } from '../services/ExpectCheck';
-import { ExpectsCheck } from '../components/Expectations'
+// import { ExpectsCheck } from '../components/Expectations'
 
-export const DiagSteps = () => {
+type DiagStepsProps = {
+  onClose: () => void
+}
+
+export const DiagSteps = ({ onClose }: DiagStepsProps) => {
     const [currentStep, setCurrentStep] = useState<number>(0);
     const [diagState, setDiagState] = useState<DiagnosticsState>({})
     
@@ -26,6 +30,10 @@ export const DiagSteps = () => {
       history.push(`${path}/${toSlug}`)
     }
 
+    const finishSteps = () => {
+      return onClose ? onClose() : null;
+    }
+
     const onDiagData = (data: any, diagType: string) => {
       setDiagState({
         ...diagState,
@@ -38,7 +46,7 @@ export const DiagSteps = () => {
         <Steps
           activeStepIndex={currentStep}
           bordered
-          onClose={() => {}}
+          onClose={() => finishSteps()}
           ordered
         >
           <Step status={currentStep > 0 ? "completed" : "pending"}>
@@ -53,9 +61,9 @@ export const DiagSteps = () => {
           <Step status={currentStep > 3 ? "completed" : "pending"}>
             Network
           </Step>
-          <Step status="pending">
+          {/* <Step status="pending">
             Serial
-          </Step>
+          </Step> */}
         </Steps>
         <Switch>
           <Route path={`${path}/(leds|start)`}>        
@@ -96,13 +104,15 @@ export const DiagSteps = () => {
             />
           </Route>
           <Route path={`${path}/network`}>
-            <Button primary onClick={() => nextStep('serial')}>Next</Button>
-            <br />
-            <NetworkInfo onDataReceived={(data) => onDiagData(data, 'network')}/>
+            <NetworkInfo 
+              onDataReceived={(data) => onDiagData(data, 'network')}
+              onBack={() => prevStep('drives')}
+              onNext={() => finishSteps()}
+            />
           </Route>
-          <Route path={`${path}/serial`}>
+          {/* <Route path={`${path}/serial`}>
             <ExpectsCheck diagState={diagState} autorun={true}/>
-          </Route>
+          </Route> */}
         </Switch>
       </>
     );
