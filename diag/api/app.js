@@ -2,7 +2,6 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 
 var indexRouter = require('./routes/index');
@@ -31,7 +30,10 @@ app.use('/api/expects', expectsRouter);
 app.use('/api/history', historyRouter);
 
 // docs
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.get('/api-docs', (req, res) => {
+  let yaml = req.query['yml']
+  res.sendFile(path.resolve(__dirname, `swagger.${yaml ? 'yml' : 'json'}`));
+});
 
 // serve the UI
 app.use(express.static(path.resolve(__dirname, '../ui/build')));
