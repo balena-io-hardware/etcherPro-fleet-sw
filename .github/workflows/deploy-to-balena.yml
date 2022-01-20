@@ -12,7 +12,7 @@ jobs:
       - uses: balena-io/deploy-to-balena-action@master
         id: build
         with:
-          balena_token: ${{ secrets.BALENA_TOKEN }}
+          balena_token: ${{ secrets.FLEET_API_KEY }}
           fleet: balena/etcherpro_production
       - name: Log release ID built
         run: echo "Built release ID ${{ steps.build.outputs.release_id }}"
