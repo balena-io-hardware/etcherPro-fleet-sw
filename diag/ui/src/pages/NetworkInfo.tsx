@@ -61,7 +61,7 @@ export const NetworkInfo = ({ onDataReceived, onBack, onNext }: NetworkInfoProps
           style={{paddingBottom: '30px'}}
         >
           <Button light onClick={() => onBack ? onBack() : null }>Back</Button>&nbsp;
-          <Button primary onClick={() => onNext ? onNext() : null }>Finish</Button>&nbsp;
+          {/* <Button primary onClick={() => onNext ? onNext() : null }>Finish</Button>&nbsp; */}
         </Flex>
       </>
     );
