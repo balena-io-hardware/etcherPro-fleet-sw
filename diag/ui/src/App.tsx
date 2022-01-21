@@ -80,7 +80,7 @@ function App() {
       )}
       <Switch>
         <Route path="/diagsteps">
-          <DiagSteps onClose={() => {}}/>
+          <DiagSteps onClose={() => null}/>
         </Route>
         <Route path="/screen">
           <ScreenTest />

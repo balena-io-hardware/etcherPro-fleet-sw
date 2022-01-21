@@ -25,8 +25,21 @@ const FlashProgressBar = styled(ProgressBar)`
 	background: #2f3033;
 `;
 
+type TypeColors = {
+	decompressing: string,
+	flashing: string,
+	verifying: string
+}
+
+const colors: TypeColors = {
+	decompressing: '#00aeef',
+	flashing: '#da60ff',
+	verifying: '#1ac135',
+} as const;
+
 interface ProgressButtonProps {
-	type: 'decompressing' | 'flashing' | 'verifying';
+	progressText: string;
+	type: keyof TypeColors;
 	active: boolean;
 	percentage: number;
 	position: number;
@@ -36,12 +49,6 @@ interface ProgressButtonProps {
 	warning?: boolean;
 	text?: string
 }
-
-const colors = {
-	decompressing: '#00aeef',
-	flashing: '#da60ff',
-	verifying: '#1ac135',
-} as const;
 
 const CancelButton = styled(({ type, onClick, ...props }) => {
 	const status = type === 'verifying' ? 'Skip' : 'Cancel';
@@ -65,59 +72,18 @@ interface FlashState {
 	percentage?: number;
 	speed: number;
 	position: number;
-	type?: 'decompressing' | 'flashing' | 'verifying';
+	type?: keyof TypeColors;
 }
 
-const  fromFlashState = ({
-	type,
-	percentage,
-	position,
-}: Pick<FlashState, 'type' | 'percentage' | 'position'>): {
-	status: string;
-	position?: string;
-} => {
-	if (type === undefined) {
-		return { status: 'Starting...' };
-	} else if (type === 'decompressing') {
-		if (percentage == null) {
-			return { status: 'Decompressing...' };
-		} else {
-			return { position: `${percentage}%`, status: 'Decompressing...' };
-		}
-	} else if (type === 'flashing') {
-		if (percentage != null) {
-			if (percentage < 100) {
-				return { position: `${percentage}%`, status: 'Flashing...' };
-			} else {
-				return { status: 'Finishing...' };
-			}
-		} else {
-			return {
-				status: 'Flashing...',
-				position: `${position ? (position.toFixed(2)) : ''}`,
-			};
-		}
-	} else if (type === 'verifying') {
-		if (percentage == null) {
-			return { status: 'Validating...' };
-		} else if (percentage < 100) {
-			return { position: `${percentage}%`, status: 'Validating...' };
-		} else {
-			return { status: 'Finishing...' };
-		}
-	}
-	return { status: 'Failed' };
-}
 
 export class ProgressButton extends React.PureComponent<ProgressButtonProps> {
 	public render() {
 		const percentage = this.props.percentage;
 		const warning = this.props.warning;
-		const { status, position } = fromFlashState({
-			type: this.props.type,
-			percentage,
-			position: this.props.position,
-		});
+		const { status, position } = { 
+			status: this.props.progressText, 
+			position: this.props.position 
+		} 
 		const type = this.props.type || 'default';
 		if (this.props.active) {
 			return (
@@ -134,7 +100,7 @@ export class ProgressButton extends React.PureComponent<ProgressButtonProps> {
 						}}
 					>
 						<Flex>
-							<Txt color="#fff">{status}&nbsp;</Txt>
+							<Txt color="#2a506f">{status}&nbsp;</Txt>
 							<Txt color={colors[type]}>{position}</Txt>
 						</Flex>
 						{type && (
