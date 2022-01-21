@@ -3,11 +3,25 @@ var router = express.Router();
 var fs = require('fs');
 var process = require('child_process');
 var path = require('path');
-var { promisify } = require('util')
-var execFileAsync = promisify(process.execFile);
 
 var DiagHistory = require('../services/DiagResult').DiagHistory
+var drivesSocket = require('../sockets/drives')
+let runningProcess = {};
 
+const broadcastToSockets = (message) => {
+  [...drivesSocket.clients.keys()].forEach(client => {
+    client.send(message);
+  })
+}
+
+const pingProgress = () => {
+  while (Object.keys(runningProcess).length > 0) {
+    setTimeout(() => {
+      broadcastToSockets('progress'),
+      1000
+    })
+  }
+}
 
 /* GET /dev/sd[a-z] drives and /dev/disk/by-path */
 router.get('/', async (req, res, next) => {
@@ -71,21 +85,55 @@ router.post('/fio', async (req, res, next) => {
     `--output-format=${output_format || "json"}`
   ]
 
-  const { stdout } = await execFileAsync('fio', parameters)
-  try {
-    DiagHistory
-      .createDrivesResult
-      .withData(stdout)
-      .persist()
+  let fioRun = process.spawn('fio', parameters);
+  pingProgress();
+  runningProcess[fioRun.pid] = fioRun.kill
+  let output = "";
 
-    fs.writeFileSync(path.join(__dirname, 'last_fio_result.json'), stdout)
-  } catch (err) {
-    console.error(err)
-    res.sendStatus(501);
+  fioRun.stdout.on('data', (chunk) => {
+    output = output + chunk;
+    broadcastToSockets('progress')
+  })
+
+  fioRun.on('exit', () => {
+    broadcastToSockets('done')
+
+    Object
+      .keys(runningProcess)
+      .forEach(v => {
+        delete runningProcess[v];
+      })
+    
+    try {
+      DiagHistory
+        .createDrivesResult
+        .withData(output)
+        .persist()
+  
+      fs.writeFileSync(path.join(__dirname, 'last_fio_result.json'), output)
+    } catch (err) {
+      console.error(err)
+    }    
+  })
+  
+  res.sendStatus(201)
+})
+
+router.get('/fio/cancel', (req, res) => {
+  broadcastToSockets('cancel')
+  try {
+    Object
+      .keys(runningProcess)
+      .forEach((v) => { 
+        if (!runningProcess[v]('SIGKILL')) { throw new Error("Can't kill process") } // kill
+        delete runningProcess[v] // remove from list
+      })
+  } catch (error) {
+    res.status(403).send(error);
     return;
   }
 
-  res.sendStatus(201)
+  res.status(204).send()
 })
 
 router.get('/fio/last', async (req, res, next) => {
