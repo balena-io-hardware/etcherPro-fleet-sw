@@ -101,7 +101,7 @@ export class ProgressButton extends React.PureComponent<ProgressButtonProps> {
 					>
 						<Flex>
 							<Txt color="#2a506f">{status}&nbsp;</Txt>
-							<Txt color={colors[type]}>{position}</Txt>
+							<Txt color={colors[type]}>{position}%</Txt>
 						</Flex>
 						{type && (
 							<CancelButton
