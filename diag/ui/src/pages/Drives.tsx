@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Box, Button, HighlightedName, Table, Txt, Flex, Heading } from 'rendition'
 import { ProgressButton } from '../components/progress-button/progress-button';
 import { FioResult, ReadOrWriteOrTrim } from '../iterfaces/FioResult';
@@ -39,52 +39,86 @@ export const Drives = ({ autoload, onDataReceived, onBack, onNext }: DrivesPageP
   const [fioCallOneByOneInProgress, setFioCallOnebyOneInProgress] = useState<boolean>(false)
   const [fioCallAllInProgress, setFioCallAllInProgress] = useState<boolean>(false)  
   const [canceled, setCanceled] = useState(false);
+  const [driveUnderTestIndex, setDriveUnderTestIndex] = useState<number>(0);
 
   useEffect(() => {
-    const ws = new WebSocket('ws://localhost:7071')
+    const ws = new WebSocket(`ws://${window.location.hostname}:7071`)
     ws.onopen = (event) => {
       ws.send("Connected to drives test progress socket");
     };
 
     ws.onmessage = async (event) => {
-      if (event.data === 'cancel') return;
-
-      if (event.data === 'progress') {
-        if (fioCallAllInProgress) {
-          setFioAllProgress(prev => prev + Math.floor(Math.random() * 10))
-        }        
+      if (event.data === 'cancel') {
+        ws.send("Cancel received")
+        return;
       }
-
+      
       if (event.data === 'done') {
-        let fioRes = await fetch('/api/drives/fio/last')
-        const lastRes = parseFioResultToDict(await fioRes.json())  
-
-        setFioResults(prevState => [...prevState, lastRes])
-        
-        if (onDataReceived) {
-          onDataReceived({ devices: drives, results: fioResults })
-        }
-
-        if (fioCallAllInProgress) {
-          setFioAllProgress(100);
-          setFioCallAllInProgress(false);
-        } 
-
-        if (fioCallOneByOneInProgress) {
-          if (canceled) return;
-
-          setFioOneByOneProgress(prevState => prevState + 1)
-          if (fioOneByOneProgress > drives.length) {
-            setFioCallOnebyOneInProgress(false)
-          } else {
-            callFioOneByOne(fioOneByOneProgress);
-          }
-        }
+        await processWsDoneMessage(ws);
       }      
     };
 
     return () => ws.close();
   }, []);
+
+  const processWsDoneMessage = async (ws: WebSocket) => {
+    let fioRes = await fetch('/api/drives/fio/last')
+    const lastRes = parseFioResultToDict(await fioRes.json())      
+
+    // getting states through the setters otherwise all of them are the default
+    setFioResults(prevState => {
+      let newResults = [...prevState, lastRes]
+
+      setFioCallAllInProgress(fioAllRunning => {
+        ws.send(JSON.stringify({all: fioAllRunning}))
+        
+        if (fioAllRunning) {
+          setFioAllProgress(100);
+  
+          if (onDataReceived) {
+            onDataReceived({ devices: drives, results: newResults })
+          }
+        }
+  
+        return false;
+      });
+  
+      setDrives(currentDrivesList => {
+        setFioCallOnebyOneInProgress(fioOneRunning => {
+          ws.send(JSON.stringify({one: fioOneRunning}))
+    
+          if (fioOneRunning) {
+            if (canceled) return false;
+    
+            setDriveUnderTestIndex(lastIndex => {
+              ws.send(JSON.stringify({lsi: lastIndex}))
+              ws.send(JSON.stringify({dri: currentDrivesList.length}))
+    
+              let newIndex = lastIndex + 1
+              setFioOneByOneProgress(newIndex / currentDrivesList.length * 100)
+    
+              if (newIndex < currentDrivesList.length) {
+                callFioOneByOne(newIndex);
+              } else {          
+                if (onDataReceived) {
+                  onDataReceived({ devices: currentDrivesList, results: newResults })
+                }
+              }
+    
+              return newIndex
+            })
+    
+            return true // this is meaningless but need to return something      
+          } else { 
+            return false 
+          }     
+        })
+        return currentDrivesList
+      })
+
+      return newResults;
+    })
+  }
 
   useEffect(() => {
     if (autoload) {
@@ -94,6 +128,32 @@ export const Drives = ({ autoload, onDataReceived, onBack, onNext }: DrivesPageP
       })()
     }
   }, [autoload])
+
+  const useInterval = (callback: Function, delay?: number) => {
+    const savedCallback = useRef<Function>();
+  
+    // Remember the latest callback.
+    useEffect(() => {
+      savedCallback.current = callback;
+    }, [callback]);
+  
+    // Set up the interval.
+    useEffect(() => {
+      function tick() {
+        if (savedCallback && savedCallback.current) {
+          savedCallback.current();
+        }
+      }
+      if (delay !== undefined) {
+        let id = setInterval(tick, delay);
+        return () => clearInterval(id);
+      }
+    }, [delay]);
+  }
+
+  useInterval(() => {
+    setFioAllProgress(prevState => prevState + Math.floor(Math.random() * 5))
+  }, fioCallAllInProgress ? 800 : undefined)
 
   const getDrives = async () => {
     const res = await fetch(`/api/drives`)
@@ -159,31 +219,39 @@ export const Drives = ({ autoload, onDataReceived, onBack, onNext }: DrivesPageP
 
   const callFioOneByOne = async (driveIndex: number) => {    
     if (driveIndex === 0) {
+      setDriveUnderTestIndex(0)
       setCanceled(false)
-      setFioOneByOneProgress(1);
+      setFioOneByOneProgress(0.1);
     }
 
-    if (canceled) {
-      setFioCallOnebyOneInProgress(false)
-      return;
-    }
-
-    const fioStart = await fetch(`/api/drives/fio`, { 
-      method: 'POST',
-      body: JSON.stringify({ 
-        devices: [`/dev/${drives[driveIndex].device}`], 
-        invalidate: 1,
-        overwrite: 1
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      },
+    setDrives(currentDrives => {
+      if (currentDrives.length > driveIndex) {
+        if (canceled) {
+          setFioCallOnebyOneInProgress(false)
+          return currentDrives;
+        }
+    
+        fetch(`/api/drives/fio`, { 
+          method: 'POST',
+          body: JSON.stringify({ 
+            devices: [`/dev/${drives[driveIndex].device}`], 
+            invalidate: 1,
+            overwrite: 1
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        }).then(res => {
+          if (res.ok) {  
+            setFioCallOnebyOneInProgress(true)
+          }
+        })
+        
+      } else {
+        setFioCallOnebyOneInProgress(false)
+      }
+      return currentDrives
     })
-    
-    if (fioStart.ok) {  
-      setFioCallOnebyOneInProgress(true)
-    } 
-    
   }
 
   const handleResultClick = async (device: string) => {

@@ -14,15 +14,6 @@ const broadcastToSockets = (message) => {
   })
 }
 
-const pingProgress = () => {
-  while (Object.keys(runningProcess).length > 0) {
-    setTimeout(() => {
-      broadcastToSockets('progress'),
-      1000
-    })
-  }
-}
-
 /* GET /dev/sd[a-z] drives and /dev/disk/by-path */
 router.get('/', async (req, res, next) => {
   try {
@@ -65,6 +56,8 @@ router.post('/fio', async (req, res, next) => {
   }
 
   const fileName = devices.join(":");
+  const outputpath = path.join(__dirname, 'last_fio_result.json');
+
   let parameters = [
     `--filename=${fileName}`,
     `--direct=${direct || 0}`,
@@ -82,38 +75,32 @@ router.post('/fio', async (req, res, next) => {
     `--invalidate=${invalidate || 0}`,
     `--overwrite=${overwrite || 0}`,
     '--group_reporting',
+    `--output=${outputpath}`,
     `--output-format=${output_format || "json"}`
   ]
 
   let fioRun = process.spawn('fio', parameters);
-  pingProgress();
-  runningProcess[fioRun.pid] = fioRun.kill
-  let output = "";
-
-  fioRun.stdout.on('data', (chunk) => {
-    output = output + chunk;
-    broadcastToSockets('progress')
-  })
+  runningProcess[fioRun.pid] = fioRun
 
   fioRun.on('exit', () => {
-    broadcastToSockets('done')
-
-    Object
-      .keys(runningProcess)
-      .forEach(v => {
+    const processIds = Object.keys(runningProcess)
+    if (processIds.length !== 0) { // when canceled the exit should not say done
+      broadcastToSockets('done')
+      
+      processIds.forEach(v => {
         delete runningProcess[v];
       })
-    
-    try {
-      DiagHistory
+      
+      try {
+        DiagHistory
         .createDrivesResult
-        .withData(output)
+        .withData(fs.readFileSync(path.join(__dirname, 'last_fio_result.json'), 'utf8'))
         .persist()
-  
-      fs.writeFileSync(path.join(__dirname, 'last_fio_result.json'), output)
-    } catch (err) {
-      console.error(err)
-    }    
+
+      } catch (err) {
+        console.error(err)
+      }
+    }
   })
   
   res.sendStatus(201)
@@ -121,14 +108,16 @@ router.post('/fio', async (req, res, next) => {
 
 router.get('/fio/cancel', (req, res) => {
   broadcastToSockets('cancel')
+  
   try {
     Object
       .keys(runningProcess)
       .forEach((v) => { 
-        if (!runningProcess[v]('SIGKILL')) { throw new Error("Can't kill process") } // kill
-        delete runningProcess[v] // remove from list
+        if (!runningProcess[v].kill('SIGKILL')) { throw new Error("Can't kill process") }
+        delete runningProcess[v]
       })
   } catch (error) {
+    console.log(error);
     res.status(403).send(error);
     return;
   }
