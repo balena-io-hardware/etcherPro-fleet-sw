@@ -27,9 +27,9 @@ function App() {
   const [expects, setExpects] = useState<ExpectationsDict>({});
   const location = useLocation();
 
-  useEffect(() => {
-    (async () => await getExpects())()
-  }, []);
+  // useEffect(() => {
+  //   (async () => await getExpects())()
+  // }, []);
 
   const closeScreenFrame = () => {
     setShowScreen(false);
