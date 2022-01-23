@@ -40,7 +40,7 @@ services:
       - 'BALENAELECTRONJS_SCREENSAVER_ON_COMMAND=screensaver_on.sh'
       - 'BALENAELECTRONJS_SCREENSAVER_OFF_COMMAND=screensaver_off.sh'
   diag-runner:
-    build: ./diag
+    image: mcraa/hardware-diagnostics
     privileged: true
     network_mode: host
     volumes:
