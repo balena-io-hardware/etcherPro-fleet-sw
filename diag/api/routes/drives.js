@@ -49,7 +49,7 @@ router.post('/fio', async (req, res, next) => {
     output_format
   } = req.body;
 
-  if (!devices || !devices.length) {
+  if (!devices || !devices.length || devices.some(v => v.indexOf('sd') < 0)) {
     console.log("No device specified (eg. `/dev/sda`). Do not run `fio` on system drive.")
     res.sendStatus(403);
     return;
@@ -78,6 +78,8 @@ router.post('/fio', async (req, res, next) => {
     `--output=${outputpath}`,
     `--output-format=${output_format || "json"}`
   ]
+
+  console.log("fio", fileName)
 
   let fioRun = process.spawn('fio', parameters);
   runningProcess[fioRun.pid] = fioRun

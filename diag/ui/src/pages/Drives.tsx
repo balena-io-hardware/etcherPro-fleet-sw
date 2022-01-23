@@ -95,7 +95,7 @@ export const Drives = ({ autoload, onDataReceived, onBack, onNext }: DrivesPageP
               ws.send(JSON.stringify({dri: currentDrivesList.length}))
     
               let newIndex = lastIndex + 1
-              setFioOneByOneProgress(newIndex / currentDrivesList.length * 100)
+              setFioOneByOneProgress(Math.round(newIndex / currentDrivesList.length * 100))
     
               if (newIndex < currentDrivesList.length) {
                 callFioOneByOne(newIndex);
@@ -152,8 +152,12 @@ export const Drives = ({ autoload, onDataReceived, onBack, onNext }: DrivesPageP
   }
 
   useInterval(() => {
-    setFioAllProgress(prevState => prevState + Math.floor(Math.random() * 5))
-  }, fioCallAllInProgress ? 800 : undefined)
+    setFioAllProgress(prevState => prevState + Math.floor(Math.random() * 7))
+  }, fioCallAllInProgress ? 700 : undefined)
+
+  useInterval(() => {
+    setFioOneByOneProgress(prevState => prevState + Math.floor(Math.random() * 3))
+  }, fioCallOneByOneInProgress ? 800 : undefined)
 
   const getDrives = async () => {
     const res = await fetch(`/api/drives`)
@@ -234,7 +238,7 @@ export const Drives = ({ autoload, onDataReceived, onBack, onNext }: DrivesPageP
         fetch(`/api/drives/fio`, { 
           method: 'POST',
           body: JSON.stringify({ 
-            devices: [`/dev/${drives[driveIndex].device}`], 
+            devices: [`/dev/${currentDrives[driveIndex].device}`], 
             invalidate: 1,
             overwrite: 1
           }),
@@ -243,7 +247,14 @@ export const Drives = ({ autoload, onDataReceived, onBack, onNext }: DrivesPageP
           },
         }).then(res => {
           if (res.ok) {  
-            setFioCallOnebyOneInProgress(true)
+            setDriveUnderTestIndex(di => { 
+              if (di <= currentDrives.length) {
+                setFioCallOnebyOneInProgress(true)
+              } else {
+                setFioCallOnebyOneInProgress(false)
+              }
+              return di;
+            })
           }
         })
         
@@ -255,7 +266,6 @@ export const Drives = ({ autoload, onDataReceived, onBack, onNext }: DrivesPageP
   }
 
   const handleResultClick = async (device: string) => {
-    console.log(device)
     if (!device.length) return;
     device = device.replace(/\/dev\//,'');
 
@@ -328,8 +338,8 @@ export const Drives = ({ autoload, onDataReceived, onBack, onNext }: DrivesPageP
               type='flashing'
               progressText='Writing...'
               active={fioCallOneByOneInProgress}
-              percentage={Math.round(fioOneByOneProgress / drives.length  * 100)}
-              position={Math.round(fioOneByOneProgress / drives.length  * 100)}
+              percentage={fioOneByOneProgress}
+              position={fioOneByOneProgress}
               disabled={false}
               cancel={()=> cancelFio()}
               warning={false}
