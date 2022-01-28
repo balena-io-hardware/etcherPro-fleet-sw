@@ -42,8 +42,14 @@ COPY --from=builder /usr/src/etcher/node_modules/electron/ /usr/src/app/node_mod
 WORKDIR /usr/src/app/node_modules/.bin
 RUN ln -s ../electron/cli.js electron
 
+RUN apt-get update && apt-get install exfat-fuse
+
 COPY zram.sh /usr/src/app/
 COPY screensaver_on.sh screensaver_off.sh /usr/bin/
+
+RUN chmod +x /usr/src/app/zram.sh
+RUN chmod +x /usr/bin/screensaver_off.sh
+RUN chmod +x /usr/bin/screensaver_on.sh
 
 COPY --from=builder /usr/src/app/update-config-and-start.js /usr/src/app
 
