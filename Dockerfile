@@ -9,7 +9,7 @@ WORKDIR /usr/src/etcher
 
 COPY etcher/scripts scripts
 COPY etcher/typings typings
-COPY etcher/tsconfig.json etcher/npm-shrinkwrap.json etcher/package.json ./
+COPY etcher/tsconfig.json etcher/package.json ./
 
 ENV npm_config_disturl=https://electronjs.org/headers
 ENV npm_config_runtime=electron
