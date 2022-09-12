@@ -5,6 +5,19 @@ volumes:
     etcher_gnupg:
     etcher_pki:
 services:
+  fan-control:
+      build: 
+         context: ./fan-block/.
+      privileged: true
+      restart: always
+      labels:
+         io.balena.features.sysfs: 1
+      environment:
+         - 'REFRESH_DELAY=10'
+         - 'PWM="1,0"'
+         - 'PWM_TEMPS="0,40,50,70"'
+         - 'PWM_DUTY="0,100,1000,40000"'
+
   etcher:
     build: .
     privileged: true
