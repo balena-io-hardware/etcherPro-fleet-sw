@@ -13,11 +13,10 @@ services:
       labels:
          io.balena.features.sysfs: 1
       environment:
-         - 'FAN_GPIO=132'
-         - 'THERMAL_ZONE=1'
-         - 'THERMAL_HIGH=70'
-         - 'THERMAL_LOW=50'
-         - 'REFRESH_DELAY=30'
+         - 'REFRESH_DELAY=10'
+         - 'PWM="1,0"'
+         - 'PWM_TEMPS="0,40,50,70"'
+         - 'PWM_DUTY="0,100,1000,40000"'
 
   etcher:
     build: .
