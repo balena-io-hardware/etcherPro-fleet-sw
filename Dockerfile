@@ -54,6 +54,7 @@ RUN chmod +x /usr/bin/screensaver_on.sh
 COPY --from=builder /usr/src/app/update-config-and-start.js /usr/src/app
 
 WORKDIR /usr/src/app
+COPY start_cd.elf ./generated/modules/node-raspberrypi-usbboot/blobs/raspberrypi/start_cd.elf
 
 CMD \
 	./zram.sh \
