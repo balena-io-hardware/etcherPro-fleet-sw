@@ -35,6 +35,8 @@ WORKDIR /usr/src/app
 COPY tsconfig.json update-config-and-start.ts ./
 RUN npx tsc update-config-and-start.ts
 
+# runtime image
+
 FROM balenablocks/aarch64-balena-electron-env:v1.2.9
 COPY --from=builder /usr/src/etcher/dist/linux-arm64-unpacked/resources/app /usr/src/app
 COPY --from=builder /usr/src/etcher/node_modules/electron/ /usr/src/app/node_modules/electron
