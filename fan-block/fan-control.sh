@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Exits on failure
 set -e
@@ -16,32 +16,34 @@ PWM_DUTY=${PWM_DUTY:-"0,200,10000,40000"}
 setup_gpio() {
 # First, set GPIO as output
 if [[ -d /sys/class/gpio/gpio${FAN_GPIO} ]]; then
-   echo ${FAN_GPIO} > /sys/class/gpio/unexport
+   echo -n ${FAN_GPIO} > /sys/class/gpio/unexport
 fi
 
-echo ${FAN_GPIO} > /sys/class/gpio/export
-echo out > /sys/class/gpio/gpio${FAN_GPIO}/direction
-echo 1 > /sys/class/gpio/gpio${FAN_GPIO}/value
+echo -n ${FAN_GPIO} > /sys/class/gpio/export
+echo -n out > /sys/class/gpio/gpio${FAN_GPIO}/direction
+echo -n 1 > /sys/class/gpio/gpio${FAN_GPIO}/value
 }
 
 setup_pwm() {
   IFS=','
-  read PWM_CHIP PWM_NUM <<< "${PWM}"
+  read PWM_CHIP PWM_NUM <<< ${PWM}
   if ! [[ -d /sys/class/pwm/pwmchip${PWM_CHIP}/pwm${PWM_NUM} ]]; then
-	  echo ${PWM_NUM} > /sys/class/pwm/pwmchip${PWM_CHIP}/export
+	  echo -n ${PWM_NUM} > /sys/class/pwm/pwmchip${PWM_CHIP}/export
   fi
 
   
-  read -ra TEMPS <<< "${PWM_TEMPS}"
-  read -ra DUTY <<< "${PWM_DUTY}"
+  read -ra TEMPS <<< ${PWM_TEMPS}
+  read -ra DUTY <<< ${PWM_DUTY}
   export TEMPS
   export DUTY
   export PWM_PATH=/sys/class/pwm/pwmchip${PWM_CHIP}/pwm${PWM_NUM}
 
-  echo 0 > ${PWM_PATH}/enable
-  echo ${PWM_PERIOD} > ${PWM_PATH}/period
-  echo ${DUTY[0]} > ${PWM_PATH}/duty_cycle
-  echo 1 > ${PWM_PATH}/enable
+  if [[ $(cat ${PWM_PATH}/enable) -eq 1 ]];then
+	  echo -n 0 > ${PWM_PATH}/enable
+  fi
+  echo -n ${PWM_PERIOD} > ${PWM_PATH}/period
+  echo -n ${DUTY[0]} > ${PWM_PATH}/duty_cycle
+  echo -n 1 > ${PWM_PATH}/enable
 }
 
 if [[ -z ${PWM} ]]; then
@@ -56,9 +58,9 @@ regulate_gpio() {
 	TEMP=$1
 
 	if [[ ${TEMP} -ge ${THERMAL_HIGH} ]];then
-       echo 1 > /sys/class/gpio/gpio${FAN_GPIO}/value
+       echo -n 1 > /sys/class/gpio/gpio${FAN_GPIO}/value
 	elif [[ ${TEMP} -le ${THERMAL_LOW} ]];then
-       echo 0 > /sys/class/gpio/gpio${FAN_GPIO}/value
+       echo -n 0 > /sys/class/gpio/gpio${FAN_GPIO}/value
 	fi
 }
 
@@ -67,10 +69,10 @@ regulate_pwm() {
     
 	# First, look for saturations
 	if [[ ${TEMP} -le ${TEMPS[0]}000 ]];then
-		echo ${DUTY[0]} > ${PWM_PATH}/duty_cycle
+		echo -n ${DUTY[0]} > ${PWM_PATH}/duty_cycle
 		return
 	elif [[ ${TEMP} -ge ${TEMPS[-1]}000 ]];then
-		echo ${DUTY[-1]} > ${PWM_PATH}/duty_cycle
+		echo -n ${DUTY[-1]} > ${PWM_PATH}/duty_cycle
 		return
 	fi
 
@@ -82,7 +84,7 @@ regulate_pwm() {
 			if ! [[ -z ${DEBUG} ]];then
 			   echo "Temp ${TEMP}, Ratio ${RATIO}, Duty ${DC}"
 			fi
-			echo ${DC} > ${PWM_PATH}/duty_cycle
+			echo -n ${DC} > ${PWM_PATH}/duty_cycle
 			return
 		fi
 	done
