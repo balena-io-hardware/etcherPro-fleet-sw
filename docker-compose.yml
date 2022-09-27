@@ -6,8 +6,7 @@ volumes:
     etcher_pki:
 services:
   fan-control:
-      build: 
-         context: ./fan-block/.
+      image: bh.cr/g_aurelien_valade/fan-control_arm32
       privileged: true
       restart: always
       labels:
