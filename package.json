@@ -5,7 +5,7 @@
   "description": "balenaEtcher on EtcherPro hardware",
   "main": "update-config-and-start.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && true"
   },
   "repository": {
     "type": "git",
