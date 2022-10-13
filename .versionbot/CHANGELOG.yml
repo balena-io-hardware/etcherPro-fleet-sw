@@ -1,0 +1,569 @@
+- commits:
+    - subject: Switch to Flowzone
+      hash: 2591f286f383ab3fd99081e3697a4426c3a69aa6
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 1.0.8
+  title: ""
+  date: 2022-10-13T16:16:44.859Z
+- version: 1.0.7
+  date: 2022-09-21T14:48:54Z
+  commits:
+    - hash: b74da4631a3c79d442f888061e57e909d38c9e46
+      author: builder555
+      subject: add new pi firmware manually for now
+      body: null
+    - hash: 62cf2e109cd2c2ebb0070276c516d4ccf18bdf5c
+      author: mcraa
+      footers:
+        change-type: patch
+      subject: "patch: added comment to separate dockerfile"
+      body: "formal commit to add change type\r
+
+        \r"
+- version: 1.0.6
+- date: 2022-01-28T13:58:05Z
+- commits:
+    - hash: 49e309d4ec8437f653ce7fd2381a5dc4dd4d4674
+- commits:
+    - author: Peter Makra
+- commits:
+    - subject: "patch: added exfat libs"
+- commits:
+    - body: null
+- commits:
+    - hash: 7517cd443f3e66131091910751db95b15158393f
+- commits:
+    - author: Peter Makra
+- commits:
+    - subject: "patch: fixed exfat install with update first"
+- commits:
+    - body: null
+- commits:
+    - hash: 54881628725b73dd391022d2b2f57d7ae9758fe9
+- commits:
+    - author: Peter Makra
+- commits:
+    - subject: "patch: fixed run righst in dockerfile"
+- commits:
+    - body: null
+- version: 1.0.5
+- date: 2022-01-27T17:19:52Z
+- commits:
+    - hash: b74d1875ab8f10e5f845b9910eebd477fc262813
+- commits:
+    - author: Peter Makra
+- commits:
+    - footers:
+        change-type: none
+- commits:
+    - subject: added github action to handle rlease to fleet
+- commits:
+    - body: null
+- commits:
+    - hash: 865bc5550fb49944c67bb09ff4da0e91f010c693
+- commits:
+    - author: Peter Makra
+- commits:
+    - footers:
+        change-type: none
+- commits:
+    - subject: "none: added github action to handle rlease to fleet [skip ci]"
+- commits:
+    - body: null
+- commits:
+    - hash: 6202b9ce77ccc8a2c5767bbc4d77e53b047cfaa4
+- commits:
+    - author: Peter Makra
+- commits:
+    - subject: Merge branch 'setup-gh-actions' of
+        github.com:balena-io-hardware/EtcherProApplication into setup-gh-actions
+- commits:
+    - body: null
+- commits:
+    - hash: c7dc421b87f2fa4658eedea8aa0bf54e980e2663
+- commits:
+    - author: Peter Makra
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: "patch: [gh] added secret variable name [skip ci]"
+- commits:
+    - body: null
+- commits:
+    - hash: 268cc5c8857fef0af032350930a4ddb5e89f399a
+- commits:
+    - author: Peter Makra
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: "patch: added private proprety to package json"
+- commits:
+    - body: null
+- commits:
+    - hash: 4f7cafbb68e60202e00213069797c41f5bcd16a8
+- commits:
+    - author: bulldozer-balena[bot]
+- commits:
+    - footers:
+        patch: added private proprety to package json
+- commits:
+    - subject: "Merge pull request #10 from balena-io-hardware/private-package"
+- commits:
+    - body: null
+- commits:
+    - hash: 45817ff7959c56467a4412dc7388cad417cb9fb3
+- commits:
+    - author: Balena CI
+- commits:
+    - subject: v1.0.4
+- commits:
+    - body: null
+- commits:
+    - hash: 6e97aa3663001702a93bd955e22d075b2bab81d6
+- commits:
+    - author: Peter Makra
+- commits:
+    - footers:
+        change-type: none
+- commits:
+    - subject: "none: added github action to handle rlease to fleet [skip ci]"
+- commits:
+    - body: null
+- commits:
+    - hash: d9873866ede44dc8eae42790ce33826c84b4fa2d
+- commits:
+    - author: Peter Makra
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: "patch: [gh] added secret variable name [skip ci]"
+- commits:
+    - body: null
+- commits:
+    - hash: 4d80efb77f644631a2e808a6ce3cdb5b0aa6728b
+- commits:
+    - author: Peter Makra
+- commits:
+    - subject: Merge branch 'setup-gh-actions' of
+        github.com:balena-io-hardware/EtcherPro-Fleet into setup-gh-actions
+- commits:
+    - body: null
+- commits:
+    - hash: 8fd11ff370323d4a1ad52fe270ac12d6709e771e
+- commits:
+    - author: Peter Makra
+- commits:
+    - subject: "patch: added submodules checkout"
+- commits:
+    - body: null
+- commits:
+    - hash: 7cdece2a05a9d8c17b58a59ec31ac1af1db4b1ab
+- commits:
+    - author: Peter Makra
+- commits:
+    - footers:
+        change-type: none
+- commits:
+    - subject: "none: added github action to handle rlease to fleet [skip ci]"
+- commits:
+    - body: null
+- commits:
+    - hash: be2d26c7aab55befb29f52a210ff9986f874327b
+- commits:
+    - author: Peter Makra
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: "patch: [gh] added secret variable name [skip ci]"
+- commits:
+    - body: null
+- commits:
+    - hash: 83f33940e1cb02e82decb8abf6cabaa20a8d1301
+- commits:
+    - author: Peter Makra
+- commits:
+    - subject: "patch: added submodules checkout"
+- commits:
+    - body: null
+- commits:
+    - hash: a9ce831523359015a8aa92a33a1450b05bd87b64
+- commits:
+    - author: Peter Makra
+- commits:
+    - subject: Merge branch 'setup-gh-actions' of
+        github.com:balena-io-hardware/EtcherPro-Fleet into setup-gh-actions
+- commits:
+    - body: null
+- version: 1.0.4
+- date: 2022-01-27T14:58:17Z
+- commits:
+    - hash: 268cc5c8857fef0af032350930a4ddb5e89f399a
+- commits:
+    - author: Peter Makra
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: "patch: added private proprety to package json"
+- commits:
+    - body: null
+- version: 1.0.3
+- date: 2021-09-14T10:11:39Z
+- commits:
+    - hash: 23c8c1311fb860dfd63ff193ed6c4476190009a6
+- commits:
+    - author: Lorenzo Alberto Maria Ambrosi
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Lorenzo Alberto Maria Ambrosi <lorenzothunder.ambrosi@gmail.com>
+- commits:
+    - subject: Convert config script to TypeScript
+- commits:
+    - body: null
+- commits:
+    - hash: a1d7c6de64e80241d666a8bd4b9fd9f2ed56ebac
+- commits:
+    - author: Lorenzo Alberto Maria Ambrosi
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Lorenzo Alberto Maria Ambrosi <lorenzothunder.ambrosi@gmail.com>
+- commits:
+    - subject: Update etcher from v1.5.121 to v1.5.122
+- commits:
+    - body: null
+- commits:
+    - hash: f22400262e0b6a02b1b5eddc5880f1c2229d465a
+- commits:
+    - author: Lorenzo Alberto Maria Ambrosi
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Lorenzo Alberto Maria Ambrosi <lorenzothunder.ambrosi@gmail.com>
+- commits:
+    - subject: Update balena-electron-env from v1.2.8 to v1.2.9
+- commits:
+    - body: null
+- version: 1.0.2
+- date: 2021-06-23T18:13:57Z
+- commits:
+    - hash: e4380a83d916a2cfd6197584bb4925a5d26c2223
+- commits:
+    - author: Lorenzo Alberto Maria Ambrosi
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Lorenzo Alberto Maria Ambrosi <lorenzothunder.ambrosi@gmail.com>
+- commits:
+    - subject: Update balena-electron-env from 1.2.4 to 1.2.5
+- commits:
+    - body: null
+- commits:
+    - hash: ee1b8f3102969db486e2075cccb8ed854d6ea7a8
+- commits:
+    - author: Lorenzo Alberto Maria Ambrosi
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Lorenzo Alberto Maria Ambrosi <lorenzothunder.ambrosi@gmail.com>
+- commits:
+    - subject: Remove pwm duty cycle config
+- commits:
+    - body: null
+- commits:
+    - hash: 332bc6fc302c9b63a1703c84b8d1028dac66ce31
+- commits:
+    - author: Lorenzo Alberto Maria Ambrosi
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Lorenzo Alberto Maria Ambrosi <lorenzothunder.ambrosi@gmail.com>
+- commits:
+    - subject: Limit configs volume to include just etcher's configs
+- commits:
+    - body: null
+- commits:
+    - hash: 938fe72fcaaf107feacfbfbef0f7815f2ec11f2a
+- commits:
+    - author: Lorenzo Alberto Maria Ambrosi
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Lorenzo Alberto Maria Ambrosi <lorenzothunder.ambrosi@gmail.com>
+- commits:
+    - subject: Update balena-electron-env from v1.2.5 to v1.2.6
+- commits:
+    - body: null
+- version: 1.0.1
+- date: 2021-04-07T12:57:22Z
+- commits:
+    - hash: 1bd66dc9db6c6d4f5a444d27d080684b6bd5aec9
+- commits:
+    - author: Alexis Svinartchouk
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Update etcher from 1.5.116 to 1.5.117
+- commits:
+    - body: Update etcher from 1.5.116 to 1.5.117
+- commits:
+    - hash: 5715fb38a04907bbe5d552545411b9ffe72e45a2
+- commits:
+    - author: Alexis Svinartchouk
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Update balena-electron-env from 1.2.1 to 1.2.4
+- commits:
+    - body: Update balena-electron-env from 1.2.1 to 1.2.4
+- commits:
+    - hash: 67866ce9d0e5b3469f0434970517725b21a9a6a7
+- commits:
+    - author: Lorenzo Alberto Maria Ambrosi
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Lorenzo Alberto Maria Ambrosi <lorenzothunder.ambrosi@gmail.com>
+- commits:
+    - subject: Update balena-electron-env from v1.1.4 to v1.2.1
+- commits:
+    - body: Update balena-electron-env from v1.1.4 to v1.2.1
+- commits:
+    - hash: 3caa43668cb75821e9adc9dd1cbb96a5963a3642
+- commits:
+    - author: Lorenzo Alberto Maria Ambrosi
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Lorenzo Alberto Maria Ambrosi <lorenzothunder.ambrosi@gmail.com>
+- commits:
+    - subject: Use https instead of ssh for etcher submodule
+- commits:
+    - body: null
+- commits:
+    - hash: c5cfa02667bf6c22aa7e82571909a889b2990495
+- commits:
+    - author: Lorenzo Alberto Maria Ambrosi
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Lorenzo Alberto Maria Ambrosi <lorenzothunder.ambrosi@gmail.com>
+- commits:
+    - subject: Add config for EP v2.2.2 + balenaOS v2.67.0+rev1
+- commits:
+    - body: null
+- commits:
+    - hash: 5565939ed20db0424bb4b704350fdf714025e955
+- commits:
+    - author: Lorenzo Alberto Maria Ambrosi
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Lorenzo Alberto Maria Ambrosi <lorenzothunder.ambrosi@gmail.com>
+- commits:
+    - subject: Add brightness env variable value for EP screen
+- commits:
+    - body: null
+- commits:
+    - hash: 55fab850c5955aa29a0ee3db915fae65959f6d8f
+- commits:
+    - author: Lorenzo Alberto Maria Ambrosi
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Lorenzo Alberto Maria Ambrosi <lorenzothunder.ambrosi@gmail.com>
+- commits:
+    - subject: Update etcher from 1.5.115 to 1.5.116
+- commits:
+    - body: Update etcher from 1.5.115 to 1.5.116
+- commits:
+    - hash: 12cad36919fb0909dd279914a8d63d5422ca04da
+- commits:
+    - author: Alexis Svinartchouk
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Update etcher from 1.5.113 to 1.5.115
+- commits:
+    - body: Update etcher from 1.5.113 to 1.5.115
+- commits:
+    - hash: 859e32b3e393a80dc1c174315064a0bb025656d2
+- commits:
+    - author: Alexis Svinartchouk
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Update balena-electron-env from 1.0.6 to 1.1.4
+- commits:
+    - body: Update balena-electron-env from 1.0.6 to 1.1.4
+- commits:
+    - hash: 79b184c9885f62ad4893f0ff158c31e908bcb2e0
+- commits:
+    - author: Alexis Svinartchouk
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Set screensaver delay to 5 minutes
+- commits:
+    - body: null
+- commits:
+    - hash: 6b5e43c2bbab4ad3fca69b44868ae9ee266f984c
+- commits:
+    - author: Alexis Svinartchouk
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Only allow updates during screensaver
+- commits:
+    - body: null
+- commits:
+    - hash: 19f21064c3f97c888243606f476c40bbd7c89a8b
+- commits:
+    - author: Alexis Svinartchouk
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Do not turn cpus 1 - 3 off during the screensaver
+- commits:
+    - body: If we do, nothing gets scheduled on them when we turn them back on
+- commits:
+    - hash: b322d2050ed0d2818699b16fcec11c3aea202fd1
+- commits:
+    - author: Alexis Svinartchouk
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Remove unneded userspace cpufreq governor setting
+- commits:
+    - body: null
+- commits:
+    - hash: 2766a4cbfffce47c8cba18639d14f86b2b37f3a9
+- commits:
+    - author: Alexis Svinartchouk
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Keep fan-control service running during screensaver
+- commits:
+    - body: null
+- commits:
+    - hash: 124486a1f852cb5f17f72977551c1c8e7391941f
+- commits:
+    - author: Alexis Svinartchouk
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Add drives order for EtcherPro 2.3.2 (same as 2.3.1)
+- commits:
+    - body: null
+- commits:
+    - hash: d4ab672b0bea5a7ae5349e1233e19040e63c8bf7
+- commits:
+    - author: Alexis Svinartchouk
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Reorder env vars
+- commits:
+    - body: null
+- commits:
+    - hash: 2372788c5ae1856782134ad02fdfad1de06fb900
+- commits:
+    - author: Alexis Svinartchouk
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Update etcher volumes, /host as tmpfs
+- commits:
+    - body: null
+- commits:
+    - hash: 9ea18799619604aa1a38a0f2c3bfc9ef8a81f0c7
+- commits:
+    - author: Alexis Svinartchouk
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Create etcher config folder if it doesn't exist
+- commits:
+    - body: null
+- commits:
+    - hash: 3ac505776ac92cfb4d339c9398f35630ce43ca00
+- commits:
+    - author: Alexis Svinartchouk
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Remove clicklock from screensaver_on, it is spawned by
+        balena-electron-env
+- commits:
+    - body: null
+- commits:
+    - hash: 77dc4a961784f35b64917baab9f082ed05c556ac
+- commits:
+    - author: Alexis Svinartchouk
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Fix zram.sh script when no zram device is available
+- commits:
+    - body: null
+- commits:
+    - hash: cecc5e3a29f87ff2c7dcdb78c33cc0108cee13e3
+- commits:
+    - author: Alexis Svinartchouk
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Document the ETCHER_PRO_VERSION env var
+- commits:
+    - body: null
