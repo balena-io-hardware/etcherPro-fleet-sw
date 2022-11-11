@@ -1,4 +1,21 @@
 - commits:
+    - subject: Adding fan control block to the fleet
+      hash: 17aeb7295332df4fd9418245031678346740942f
+      body: |
+        Migrating the fan block source to `balena` org on balenaHub.
+      footer:
+        Changelog-entry: Adding fan control block to the fleet
+        changelog-entry: Adding fan control block to the fleet
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Aurelien VALADE <aurelien.valade@balena.io>
+        signed-off-by: Aurelien VALADE <aurelien.valade@balena.io>
+      author: Aurelien VALADE
+      nested: []
+  version: 1.1.0
+  title: ""
+  date: 2022-11-11T15:36:02.378Z
+- commits:
     - subject: Switch to Flowzone
       hash: 2591f286f383ab3fd99081e3697a4426c3a69aa6
       body: ""
