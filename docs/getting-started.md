@@ -1,15 +1,10 @@
----
-description: Getting started for etcherPro 
-slug: /
----
-
 # EtcherPro User manual
 
 ## 1. Features
 
-![EtcherPro-manual-01](img/etcher-pro-top-view.jpeg)
-![EtcherPro-manual-02](img/etcher-pro-slots.jpeg)
-![EtcherPro-manual-03](img/etcher-pro-rear-view.jpeg)
+![EtcherPro-manual-01](./images/etcher-pro-top-view.jpeg)
+![EtcherPro-manual-02](./images/etcher-pro-slots.jpeg)
+![EtcherPro-manual-03](./images/etcher-pro-rear-view.jpeg)
 
 | Specifications |  |
 | --- | --- |

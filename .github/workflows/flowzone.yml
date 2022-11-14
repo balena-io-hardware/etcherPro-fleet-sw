@@ -10,8 +10,9 @@ on:
 jobs:
   flowzone:
     name: Flowzone
-    uses: product-os/flowzone/.github/workflows/flowzone.yml@master
+    uses: product-os/flowzone/.github/workflows/flowzone.yml@add-website-type
     # https://github.com/balena-io-hardware/EtcherPro-Fleet/settings/secrets/actions
     secrets: inherit
     with:
       balena_slugs: balena/etcherpro_production
+      cloudflare_website: "etcherpro"
