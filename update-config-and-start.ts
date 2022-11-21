@@ -149,7 +149,17 @@ async function main() {
 			return [drive, ['r', 'g', 'b'].map(color => `led${ledNumber}_${color}`)];
 		}));
 	}
-	await writeConfigFile({ ...rest, ledsMapping, automountOnFileSelect, drivesOrder });
+	let ledColors= {
+		"green": [0,1,0],
+		"purple": [1,0,1],
+		"red": [1,0,0],
+		"blue": [0,0,1],
+		"white": [1,1,1],
+		"black": [0,0,0]
+	  };
+	await writeConfigFile({ ...rest, ledsMapping, automountOnFileSelect, drivesOrder, ledColors });
+	
+	
 	const xinit = spawn('xinit', [], { stdio: 'inherit', env: { XRANDR_ARGS: xrandrArgs, ...env } });
 	xinit.on('close', (code) => process.exitCode = code || undefined);
 	xinit.on('error', (err) => console.error('Error starting xinit, reason:', err.stack))
