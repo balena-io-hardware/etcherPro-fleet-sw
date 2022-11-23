@@ -1,4 +1,30 @@
 - commits:
+    - subject: Fixing LEDs colors configuration
+      hash: 7655daedd6215c3b17688c25b086ee179d92caa7
+      body: >
+        Adding default LEDs colors configuration to `update-config-and-start.ts`
+        script to fix the missing LEDs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Aurelien VALADE <aurelien.valade@balena.io>
+        signed-off-by: Aurelien VALADE <aurelien.valade@balena.io>
+      author: Aurelien VALADE
+      nested: []
+    - subject: Fixing the build with the newer versions of Etcher for Etcher Pro
+      hash: 0ad579c2fc5cca92ffeba912333eee374ba9510f
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-of-by: Aurelien VALADE <aurelien.valade@balena.io>
+        signed-of-by: Aurelien VALADE <aurelien.valade@balena.io>
+      author: wolvi-lataniere
+      nested: []
+  version: 1.2.0
+  title: ""
+  date: 2022-11-23T16:18:31.876Z
+- commits:
     - subject: Adding fan control block to the fleet
       hash: 17aeb7295332df4fd9418245031678346740942f
       body: |
