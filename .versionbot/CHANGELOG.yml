@@ -1,4 +1,16 @@
 - commits:
+    - subject: added test checklist
+      hash: c347c2fa1a06fbb4104b2a0791553259a522c5fc
+      body: ""
+      footer:
+        Change-Type: patch
+        change-type: patch
+      author: builder555
+      nested: []
+  version: 1.2.1
+  title: ""
+  date: 2022-11-24T21:03:05.215Z
+- commits:
     - subject: Fixing LEDs colors configuration
       hash: 7655daedd6215c3b17688c25b086ee179d92caa7
       body: >
