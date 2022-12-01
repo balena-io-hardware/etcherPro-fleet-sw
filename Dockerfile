@@ -52,7 +52,7 @@ COPY --from=builder /usr/src/etcher/node_modules/electron/ /usr/src/app/node_mod
 WORKDIR /usr/src/app/node_modules/.bin
 RUN ln -s ../electron/cli.js electron
 
-RUN apt-get update && apt-get install exfat-fuse lzma
+RUN apt-get update && apt-get install exfat-fuse lzma docker.io
 
 COPY zram.sh /usr/src/app/
 COPY screensaver_on.sh screensaver_off.sh /usr/bin/
@@ -67,6 +67,7 @@ WORKDIR /usr/src/app
 COPY start_cd.elf ./generated/modules/node-raspberrypi-usbboot/blobs/raspberrypi/start_cd.elf
 
 CMD \
-	./zram.sh \
+  docker image prune -a -f \
+	&& ./zram.sh \
 	&& node /usr/src/app/update-config-and-start.js
 
