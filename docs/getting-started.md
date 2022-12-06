@@ -91,18 +91,6 @@ Backing up one or multiple drives into another drive
 - Once the flashing is complete, the LED will turn green for a successful flash, and red for a failed one
 - You may safely unplug the drive when flashing is complete
 
-### Format drive
-
-Formatting one or multiple drives
-
-- From the Etcher menu, select **more options**, then **Format drive**
-- Plug one or more drives you would like to format on the slots with the white-colored blinking LEDs
-- The drives will be selected automatically, and the LED will stop blinking
-- Select **Flash**, to begin the flashing process
-- The LED of the target slot will first blink purple for flashing, and then green for validating
-- Once the formatting is complete, the LEDs will turn green for successfully formatted drives, and red for the failed ones
-- You may safely unplug the drive when formatting is complete
-
 ### 2.3 Daisy-chaining (power only)
 
 Connecting up to 10 EtcherPro devices and power them from one socket.
