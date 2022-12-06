@@ -1,4 +1,18 @@
 - commits:
+    - subject: Adding image pruning at startup to prevent disk saturation
+      hash: 1c7f509c15595404cac6bc2a05e86c921eab42fd
+      body: >
+        Adding `docker image prune -a -f` before starting `etcher` to remove old
+        images left by the OS.
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Aurelien VALADE
+      nested: []
+  version: 1.2.2
+  title: ""
+  date: 2022-12-06T22:05:00.224Z
+- commits:
     - subject: added test checklist
       hash: c347c2fa1a06fbb4104b2a0791553259a522c5fc
       body: ""
