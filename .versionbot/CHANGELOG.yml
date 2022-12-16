@@ -1,4 +1,19 @@
 - commits:
+    - subject: Update dependency @types/node to 18.11.11
+      hash: b0145d47d998013ed54e985b4c3b4f58bb3cb6ea
+      body: |
+        Update @types/node to 18.11.11
+
+        Update @types/node from 16.7.1 to 18.11.11
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 1.2.4
+  title: ""
+  date: 2022-12-16T15:27:01.585Z
+- commits:
     - subject: Fixing screensaver restart delay
       hash: 7904362a3c016d7a3faf322b656c56bac1b7eb39
       body: >
