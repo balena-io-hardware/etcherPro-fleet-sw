@@ -1,46 +1,15 @@
 FROM balenalib/aarch64-debian-node:14.17-bullseye-build as builder
+RUN install_packages p7zip-full git python gcc g++ ruby-dev make libx11-dev libxkbfile-dev fakeroot rpm libsecret-1-dev jq python2.7-dev python3-pip python-setuptools libudev-dev
 
-RUN apt-get update
-RUN apt-get install python3 python2 jq chromium 
-
-# install dependencies
-
-WORKDIR /usr/src/etcher
-
-COPY etcher/scripts scripts
-COPY etcher/typings typings
-COPY etcher/tsconfig.json etcher/package.json ./
-
-ENV npm_config_disturl=https://electronjs.org/headers
-ENV npm_config_runtime=electron
-ENV JOBS=1
-RUN npm_config_target=$(jq .devDependencies.electron package.json) npm i --openssl_fips=""
-
-### Hot fixing lzma-native
-RUN npm i -g prebuildify
-WORKDIR /usr/src/etcher/node_modules/lzma-native
-RUN npm run prebuild
-
-### Proceed with the rest
 WORKDIR /usr/src/app
 
 COPY package.json package-lock.json ./
-RUN npm i
-
-# build sources
-
-WORKDIR /usr/src/etcher
-
-COPY etcher/assets assets
-COPY etcher/lib lib
-COPY etcher/tsconfig.webpack.json etcher/webpack.config.ts etcher/electron-builder.yml etcher/afterPack.js etcher/afterSignHook.js ./
-RUN npm run webpack
-RUN PATH=$(pwd)/node_modules/.bin/:$PATH electron-builder --dir --config.asar=false --config.npmRebuild=false --config.nodeGypRebuild=false
-
-WORKDIR /usr/src/app
-
 COPY tsconfig.json update-config-and-start.ts ./
-RUN npx tsc update-config-and-start.ts
+RUN npm i && npx tsc update-config-and-start.ts
+
+WORKDIR /usr/src/
+COPY build-etcher.sh ./build-etcher.sh
+RUN chmod +x ./build-etcher.sh && ./build-etcher.sh
 
 # runtime image
 
@@ -70,4 +39,3 @@ CMD \
   docker image prune -a -f \
 	&& ./zram.sh \
 	&& node /usr/src/app/update-config-and-start.js
-
