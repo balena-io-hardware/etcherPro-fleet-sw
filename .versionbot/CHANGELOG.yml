@@ -1,4 +1,40 @@
 - commits:
+    - subject: "patch: revert electron env to 1.2.9"
+      hash: 55ce1a6b5c5d8ecb0ff0df62994a79cd941516b4
+      body: ""
+      footer: {}
+      author: mcraa
+      nested: []
+    - subject: "Patch: removed redundant copy"
+      hash: 63d070fc68e96873f2c22494b35ac557aa886951
+      body: ""
+      footer: {}
+      author: Peter Makra
+      nested: []
+    - subject: "patch: rebased to new build process"
+      hash: 8b03a780d3db2ab31d5bec3764513813292752cf
+      body: ""
+      footer: {}
+      author: Peter Makra
+      nested: []
+    - subject: "patch: etcher repo with sdk 7.2.4, ext2fs build handling"
+      hash: e2c523fbc11cfaa800b4b027dc999363203be0c4
+      body: ""
+      footer: {}
+      author: Peter Makra
+      nested: []
+    - subject: "Patch: testing modified build process to fix etcher"
+      hash: 5bf7dea9146ed17f22410a8f51cfe2335ab070ba
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: builder555
+      nested: []
+  version: 1.2.5
+  title: ""
+  date: 2023-01-05T19:57:44.551Z
+- commits:
     - subject: Update dependency @types/node to 18.11.11
       hash: b0145d47d998013ed54e985b4c3b4f58bb3cb6ea
       body: |
