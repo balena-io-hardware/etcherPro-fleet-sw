@@ -1,4 +1,19 @@
 - commits:
+    - subject: "chore(deps): update balenalib/aarch64-debian-node docker tag to v14.21"
+      hash: 758f53368fef5f1c9986203c5c19b1d07c569eb6
+      body: |
+        Update balenalib/aarch64-debian-node to 14.21
+
+        Update balenalib/aarch64-debian-node from 14.17 to 14.21
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Renovate Bot
+      nested: []
+  version: 1.3.0
+  title: ""
+  date: 2023-01-05T20:04:45.114Z
+- commits:
     - subject: "patch: revert electron env to 1.2.9"
       hash: 55ce1a6b5c5d8ecb0ff0df62994a79cd941516b4
       body: ""
