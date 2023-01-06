@@ -1,4 +1,18 @@
 - commits:
+    - subject: Change fan pwm duty to 650 at lowest temp
+      hash: 2ea224abc19bc83585c1d4de680058beafd5c557
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Bucknall <alex.bucknall@gmail.com>
+        signed-off-by: Alex Bucknall <alex.bucknall@gmail.com>
+      author: Alex Bucknall
+      nested: []
+  version: 1.2.6
+  title: ""
+  date: 2023-01-06T15:17:36.827Z
+- commits:
     - subject: "patch: revert electron env to 1.2.9"
       hash: 55ce1a6b5c5d8ecb0ff0df62994a79cd941516b4
       body: ""
