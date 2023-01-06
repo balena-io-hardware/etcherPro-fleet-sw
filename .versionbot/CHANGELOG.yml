@@ -1,4 +1,38 @@
 - commits:
+    - subject: "patch: escaped dbus addr"
+      hash: c67e5ed90daf57df25b74cd16228166cdfc274f9
+      body: ""
+      footer: {}
+      author: mcraa
+      nested: []
+    - subject: "patch: simplified .xinit"
+      hash: 04c71d7cab5cf0567dad7f7f9991df685ad69d11
+      body: ""
+      footer: {}
+      author: mcraa
+      nested: []
+    - subject: "patch: removed -nocursor"
+      hash: f9a07ab2efa34525b241a29610b78541721f9b5f
+      body: ""
+      footer: {}
+      author: mcraa
+      nested: []
+    - subject: "patch: chmod .x-files"
+      hash: b82e88c96c39cc7ab1b2dc5eee2ad231acaacab6
+      body: ""
+      footer: {}
+      author: mcraa
+      nested: []
+    - subject: "patch: update electron-env 14.19-buster"
+      hash: d286b16e7322d3cf4b197bc40e2bb89c7a7c8070
+      body: ""
+      footer: {}
+      author: mcraa
+      nested: []
+  version: 1.2.6
+  title: ""
+  date: 2023-01-06T13:54:53.696Z
+- commits:
     - subject: "patch: revert electron env to 1.2.9"
       hash: 55ce1a6b5c5d8ecb0ff0df62994a79cd941516b4
       body: ""
