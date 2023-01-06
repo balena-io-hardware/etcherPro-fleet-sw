@@ -13,7 +13,7 @@ RUN chmod +x ./build-etcher.sh && ./build-etcher.sh
 
 # runtime image
 
-FROM mcraa/aarch64-balena-electron-env:v1.2.12-buster-v2
+FROM mcraa/aarch64-balena-electron-env:v1.2.12-buster-v3
 COPY --from=builder /usr/src/etcher/dist/linux-arm64-unpacked/resources/app /usr/src/app
 COPY --from=builder /usr/src/etcher/generated /usr/src/app/generated
 COPY --from=builder /usr/src/etcher/node_modules/electron/ /usr/src/app/node_modules/electron
