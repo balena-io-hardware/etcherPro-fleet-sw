@@ -9,6 +9,8 @@ RUN npm i && npx tsc update-config-and-start.ts
 
 WORKDIR /usr/src/
 COPY build-etcher.sh ./build-etcher.sh
+#Ensure we clear the balena builder cache to fetch latest etcher
+ADD "https://api.github.com/repos/balena-io/etcher/commits?per_page=1" etcher_latest_commit
 RUN chmod +x ./build-etcher.sh && ./build-etcher.sh
 
 # runtime image
