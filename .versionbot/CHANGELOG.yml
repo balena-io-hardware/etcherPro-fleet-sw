@@ -1,4 +1,67 @@
 - commits:
+    - subject: "chore(deps): update etcher digest to d5ba1ea"
+      hash: 7d403b1148887ab0cf0ae411462ca206d496504f
+      body: |
+        Update etcher to
+
+        Update etcher from  to
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Adding EtcherPro device serial number to the Settings modal
+              hash: d25eda9a7d6bf89284b630b2d55cbb0a7e3a9432
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Aurelien VALADE
+              nested: []
+          version: etcher-1.13.4
+          title: ""
+          date: 2023-01-12T15:10:50.328Z
+        - commits:
+            - subject: "patch: progress cm4 to second stage"
+              hash: 2475d576c7d9ecb46507c47c4143bdbfbdb44e45
+              body: ""
+              footer: {}
+              author: Peter Makra
+              nested: []
+          version: etcher-1.13.3
+          title: ""
+          date: 2023-01-11T14:30:45.116Z
+        - commits:
+            - subject: "patch: fixed winget parameter name"
+              hash: 33fe4b2c1abcb7f71f42a4b682f174422cb72a00
+              body: ""
+              footer: {}
+              author: mcraa
+              nested: []
+          version: etcher-1.13.2
+          title: ""
+          date: 2023-01-02T20:55:58.179Z
+        - commits:
+            - subject: "patch: updated sdk to fix bz2 issue"
+              hash: f79cb0fac56f6ec86f3a6f9be7035fbf59102253
+              body: ""
+              footer: {}
+              author: Peter Makra
+              nested: []
+            - subject: "patch: update copyright in electron-builder"
+              hash: ec42892c7cf1d22f4bb2968733ba9dc85e3552c6
+              body: ""
+              footer: {}
+              author: JOASSART Edwin
+              nested: []
+          version: etcher-1.13.1
+          title: ""
+          date: 2023-01-02T17:26:55.602Z
+  version: 1.3.0
+  title: ""
+  date: 2023-01-12T15:23:59.318Z
+- commits:
     - subject: "patch: revert electron env to 1.2.9"
       hash: 55ce1a6b5c5d8ecb0ff0df62994a79cd941516b4
       body: ""
