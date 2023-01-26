@@ -1,5 +1,5 @@
 gem install fpm --no-document
-git clone --recurse-submodules --depth 1 https://github.com/balena-io/etcher
+# git clone --recurse-submodules --depth 1 https://github.com/balena-io/etcher
 cd etcher
 export NODE_OPTIONS="--max-old-space-size=1024"
 export PUPPETEER_SKIP_DOWNLOAD=1
@@ -16,4 +16,4 @@ npm install
 npm run prebuild
 cd ../..
 npm run webpack
-ELECTRON_BUILDER_ARCHITECTURE=aarch64 USE_SYSTEM_FPM=true node_modules/.bin/electron-builder --linux
+# ELECTRON_BUILDER_ARCHITECTURE=aarch64 USE_SYSTEM_FPM=true node_modules/.bin/electron-builder --linux
