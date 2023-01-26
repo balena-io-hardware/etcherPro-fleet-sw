@@ -28,7 +28,8 @@ COPY --from=builder /usr/src/etcher/node_modules/electron/ /usr/src/app/node_mod
 WORKDIR /usr/src/app/node_modules/.bin
 RUN ln -s ../electron/cli.js electron
 
-RUN apk update && apk add fuse xz-dev docker glib-networking util-linux mesa-dri-gallium libproxy-bin glib-networking eudev
+#added all the packages to get MESA working, we'll need to remove some of them to clean up
+RUN apk update && apk add fuse xz-dev docker glib-networking util-linux mesa-dri-gallium libproxy-bin glib-networking eudev mesa-dri-vc4 mesa-dri-swrast xorg-server xorg-server-xephyr xorg-server-xnest
 
 COPY zram.sh /usr/src/app/
 COPY screensaver_on.sh screensaver_off.sh /usr/bin/
