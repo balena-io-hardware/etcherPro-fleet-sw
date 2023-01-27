@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/ash
 
 dbus-send --system --dest=org.freedesktop.systemd1 --type=method_call --print-reply /org/freedesktop/systemd1 org.freedesktop.systemd1.Manager.StartUnit string:gov-switch.service string:replace
 

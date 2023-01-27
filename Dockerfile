@@ -1,5 +1,6 @@
-FROM balenalib/aarch64-debian-node:14.17-bullseye-build as builder
-RUN install_packages p7zip-full git python gcc g++ ruby-dev make libx11-dev libxkbfile-dev fakeroot rpm libsecret-1-dev jq python2.7-dev python3-pip python-setuptools libudev-dev
+FROM balenalib/aarch64-alpine-node:14.21 as builder
+RUN install_packages bash libx11-dev libxscrnsaver-dev autoconf automake libtool p7zip git python3 gcc g++ ruby-dev make libx11-dev libxkbfile-dev fakeroot rpm libsecret-dev jq py3-pip py-setuptools eudev-dev\
+    util-linux-dev squashfs-tools gcompat
 
 WORKDIR /usr/src/app
 
@@ -8,22 +9,27 @@ COPY tsconfig.json update-config-and-start.ts ./
 RUN npm i && npx tsc update-config-and-start.ts
 
 WORKDIR /usr/src/
+COPY etcher etcher
 COPY build-etcher.sh ./build-etcher.sh
 #Ensure we clear the balena builder cache to fetch latest etcher
-ADD "https://api.github.com/repos/balena-io/etcher/commits?per_page=1" etcher_latest_commit
+#ADD "https://api.github.com/repos/balena-io/etcher/commits?per_page=1" etcher_latest_commit
+ENV USE_SYSTEM_7ZA=true
+RUN mkdir -p /root/.cache/electron-builder/appimage/appimage-12.0.1/linux-arm64/
+RUN ln -s `which mksquashfs` /root/.cache/electron-builder/appimage/appimage-12.0.1/linux-arm64/mksquashfs
+
 RUN chmod +x ./build-etcher.sh && ./build-etcher.sh
 
 # runtime image
 
-FROM balenablocks/aarch64-balena-electron-env:v1.2.9
-COPY --from=builder /usr/src/etcher/dist/linux-arm64-unpacked/resources/app /usr/src/app
+FROM balenablocks/aarch64-balena-electron-env:alpine
+#COPY --from=builder /usr/src/etcher/dist/linux-arm64-unpacked/resources/app /usr/src/app
 COPY --from=builder /usr/src/etcher/generated /usr/src/app/generated
 COPY --from=builder /usr/src/etcher/node_modules/electron/ /usr/src/app/node_modules/electron
 
 WORKDIR /usr/src/app/node_modules/.bin
 RUN ln -s ../electron/cli.js electron
 
-RUN apt-get update && apt-get install exfat-fuse lzma docker.io
+RUN apk update && apk add fuse xz-dev docker util-linux dbus gcompat
 
 COPY zram.sh /usr/src/app/
 COPY screensaver_on.sh screensaver_off.sh /usr/bin/

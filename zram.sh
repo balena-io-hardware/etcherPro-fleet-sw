@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/ash
 
 DEVICE=/dev/zram0
 ZRAM_SIZE=${ZRAM_SIZE:=1G}

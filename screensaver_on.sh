@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/ash
 
 if [ ! -d /sys/class/gpio/gpio101 ]; then echo 101 > /sys/class/gpio/export; fi
 if [ -d /sys/class/gpio/gpio101 ]; then echo 0 > /sys/class/gpio/gpio101/value; fi
