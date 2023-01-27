@@ -23,7 +23,7 @@ COPY --from=builder /usr/src/etcher/node_modules/electron/ /usr/src/app/node_mod
 WORKDIR /usr/src/app/node_modules/.bin
 RUN ln -s ../electron/cli.js electron
 
-RUN apt-get update && apt-get install exfat-fuse lzma docker.io
+RUN apt-get update && apt-get install exfat-fuse lzma
 
 COPY zram.sh /usr/src/app/
 COPY screensaver_on.sh screensaver_off.sh /usr/bin/
@@ -39,6 +39,6 @@ WORKDIR /usr/src/app
 #COPY start_cd.elf ./generated/modules/node-raspberrypi-usbboot/blobs/raspberrypi/start_cd.elf
 
 CMD \
-  docker image prune -a -f \
+    curl -X POST --unix-socket $(echo ${DOCKER_HOST} | sed "s/unix:\/\///") http://localhost/images/prune\?dangling\=false \
 	&& ./zram.sh \
 	&& node /usr/src/app/update-config-and-start.js
