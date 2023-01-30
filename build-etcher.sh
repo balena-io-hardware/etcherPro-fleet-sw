@@ -1,5 +1,4 @@
 gem install fpm --no-document
-git clone --recurse-submodules --depth 1 https://github.com/balena-io/etcher
 cd etcher
 export NODE_OPTIONS="--max-old-space-size=1024"
 export PUPPETEER_SKIP_DOWNLOAD=1
