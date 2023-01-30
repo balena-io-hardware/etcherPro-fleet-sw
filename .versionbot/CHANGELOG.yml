@@ -1,4 +1,18 @@
 - commits:
+    - subject: Reverting Etcher build to COPY etcher folder instead of Git clonning it
+      hash: b35e7052f2e68cc6498761829731d49361e96f80
+      body: >
+        This has been done to improve etcher's traceability and avoid unwanted
+        side-effects.
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Aurelien VALADE
+      nested: []
+  version: 1.3.3
+  title: ""
+  date: 2023-01-30T12:25:44.277Z
+- commits:
     - subject: Reducing image size by removing Docker as a dependency
       hash: 9c012a881c2b62d99fc8e4be7b8ba3b9636f681f
       body: >
