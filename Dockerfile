@@ -33,6 +33,7 @@ RUN chmod +x /usr/bin/screensaver_off.sh
 RUN chmod +x /usr/bin/screensaver_on.sh
 
 COPY --from=builder /usr/src/app/update-config-and-start.js /usr/src/app
+COPY .xinitrc /root/.xinitrc
 
 WORKDIR /usr/src/app
 # correct .elf is part of etcher-sdk since 7.4.2
