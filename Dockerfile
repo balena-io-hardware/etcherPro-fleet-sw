@@ -1,4 +1,4 @@
-FROM balenalib/aarch64-debian-node:14.17-bullseye-build as builder
+FROM balenalib/armv7hf-debian-node:14.17-bullseye-build as builder
 RUN install_packages p7zip-full git python gcc g++ ruby-dev make libx11-dev libxkbfile-dev fakeroot rpm libsecret-1-dev jq python2.7-dev python3-pip python-setuptools libudev-dev
 
 WORKDIR /usr/src/app
@@ -15,8 +15,8 @@ RUN chmod +x ./build-etcher.sh && ./build-etcher.sh
 
 # runtime image
 
-FROM balenablocks/aarch64-balena-electron-env:v1.2.9
-COPY --from=builder /usr/src/etcher/dist/linux-arm64-unpacked/resources/app /usr/src/app
+FROM balenablocks/armv7hf-balena-electron-env:v1.2.9
+COPY --from=builder /usr/src/etcher/dist/linux-armv7l-unpacked/resources/app /usr/src/app
 COPY --from=builder /usr/src/etcher/generated /usr/src/app/generated
 COPY --from=builder /usr/src/etcher/node_modules/electron/ /usr/src/app/node_modules/electron
 

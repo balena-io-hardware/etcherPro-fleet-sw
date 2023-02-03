@@ -157,7 +157,7 @@ async function main() {
 		"white": [1,1,1],
 		"black": [0,0,0]
 	  };
-	await writeConfigFile({ ...rest, ledsMapping, automountOnFileSelect, drivesOrder, ledColors });
+	await writeConfigFile({ ...rest, automountOnFileSelect, drivesOrder });
 	
 	
 	const xinit = spawn('xinit', [], { stdio: 'inherit', env: { XRANDR_ARGS: xrandrArgs, ...env } });
