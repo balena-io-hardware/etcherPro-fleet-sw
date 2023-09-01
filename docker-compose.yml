@@ -27,6 +27,10 @@ services:
       io.balena.features.dbus: 1
       io.balena.features.supervisor-api: 1
       io.balena.features.balena-socket: 1
+    ulimits:
+      core:
+        soft: 0
+        hard: 0
     volumes:
       - 'etcher_cache:/root/.cache'
       - 'etcher_config:/root/.config/balena-etcher'
