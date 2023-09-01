@@ -1,10 +1,21 @@
 - commits:
+    - subject: "patch: set ulimits core to 0"
+      hash: 72d39ed52b8ad6eaacd1757d02bb7ccc31b7777d
+      body: Prevents Electron crashes to produce coredumps which will eventually fill
+        the disk and crash the EP
+      footer: {}
+      author: Edwin Joassart
+      nested: []
+  version: 1.3.5
+  title: ""
+  date: 2023-09-01T12:53:14.806Z
+- commits:
     - subject: Adding BALENAELECTRONJS_REMOTE_INSPECT_PORT to enable node inspection
         on electron
       hash: df76c9f6a34d80f068a52ae1c62055a4f09630bb
       body: >
-        Enabling node inspection on electron is necessary to use playwright remote
-        connection to electon. This will be used for integration testing.
+        Enabling node inspection on electron is necessary to use playwright
+        remote connection to electon. This will be used for integration testing.
       footer:
         Change-type: patch
         change-type: patch
@@ -31,8 +42,8 @@
     - subject: Reducing image size by removing Docker as a dependency
       hash: 9c012a881c2b62d99fc8e4be7b8ba3b9636f681f
       body: >
-        Replaced the `docker image prune` command by a `curl` call and removed the
-        `docker.io` package from the image.
+        Replaced the `docker image prune` command by a `curl` call and removed
+        the `docker.io` package from the image.
       footer:
         Change-type: patch
         change-type: patch
@@ -256,8 +267,8 @@
     - subject: Fixing screensaver restart delay
       hash: 7904362a3c016d7a3faf322b656c56bac1b7eb39
       body: >
-        Changing `screensaver_off.sh` sequence and adding 300ms delay to let some
-        time for the display to settle before enabling backlight.
+        Changing `screensaver_off.sh` sequence and adding 300ms delay to let
+        some time for the display to settle before enabling backlight.
       footer:
         Change-type: patch
         change-type: patch
